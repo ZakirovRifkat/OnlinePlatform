@@ -4,6 +4,7 @@ import { Header } from "./components/Header";
 import { Info } from "./components/Info";
 import { ModelStand } from "./components/ModelStand";
 import { ExtraLinks } from "./components/ExtraLinks";
+import { Footer } from "./components/Footer";
 
 function App() {
     return (
@@ -12,6 +13,7 @@ function App() {
             <Info />
             <ModelStand />
             <ExtraLinks />
+            <Footer />
         </AppContainer>
     );
 }

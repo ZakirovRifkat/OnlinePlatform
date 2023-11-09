@@ -54,7 +54,7 @@ const Title = styled.div`
 const InformationContainer = styled.div`
     display: flex;
     flex-direction: row;
-    margin-top: 55px;
+    margin-top: 80px;
     gap: 12vw;
 `;
 const InformationContent = styled.div`
