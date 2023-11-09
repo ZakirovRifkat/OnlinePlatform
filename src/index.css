@@ -15,6 +15,7 @@ body {
     min-width: 320px;
     width: 100%;
     min-height: 100vh;
+    background: linear-gradient(146deg, #e6e9f0 21.56%, #eef1f5 86.35%);
     font-family: "Arial", "Helvetica", sans-serif;
 }
 * {
