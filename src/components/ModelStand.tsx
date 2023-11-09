@@ -102,7 +102,7 @@ const Title = styled.div`
     font-size: 26px;
     font-style: normal;
     font-weight: 700;
-    line-height: 144.523%; /* 37.576px */
+    line-height: 144.523%;
     letter-spacing: 0.52px;
 `;
 const DataInputContainer = styled.div`

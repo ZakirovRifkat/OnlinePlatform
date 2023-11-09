@@ -3,6 +3,7 @@ import "./App.css";
 import { Header } from "./components/Header";
 import { Info } from "./components/Info";
 import { ModelStand } from "./components/ModelStand";
+import { ExtraLinks } from "./components/ExtraLinks";
 
 function App() {
     return (
@@ -10,6 +11,7 @@ function App() {
             <Header />
             <Info />
             <ModelStand />
+            <ExtraLinks />
         </AppContainer>
     );
 }
@@ -17,6 +19,6 @@ function App() {
 const AppContainer = styled.div`
     display: flex;
     flex-direction: column;
-    gap: 60px;
+    gap: 100px;
 `;
 export default App;
