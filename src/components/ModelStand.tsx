@@ -1,6 +1,7 @@
 import { Slider } from "@mui/material";
 import styled from "styled-components";
 import { ModelCard } from "./ModelCard";
+import { useEffect, useState } from "react";
 
 const marks = [
     {
@@ -32,13 +33,20 @@ export const ModelStand = () => {
     function valueLabelFormat(value: number) {
         return marks.findIndex((mark) => mark.value === value) + 1;
     }
+    const [omega0, setOmega] = useState(0);
+
     return (
         <Container>
             <DataContainer>
                 <Title>Интерактивная модель</Title>
                 <DataInputContainer>
                     <InputText>
-                        <div>Угловая скорость ώ</div> <Input />
+                        <div>Угловая скорость ώ</div>{" "}
+                        <Input
+                            onChange={(e) => {
+                                setOmega(Number(e.target.value));
+                            }}
+                        />
                         <div style={{ textAlign: "end", width: "120px" }}>
                             рад/с
                         </div>
@@ -81,7 +89,7 @@ export const ModelStand = () => {
                     </ButtonContainer>
                 </DataInputContainer>
             </DataContainer>
-            <ModelCard />
+            <ModelCard omega={omega0} />
         </Container>
     );
 };
