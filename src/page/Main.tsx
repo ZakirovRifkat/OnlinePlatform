@@ -3,12 +3,13 @@ import { GovernorModel } from "../components/GovernorModel";
 import styled from "styled-components";
 
 export const Main = () => {
-    const [fontSize, setFontSize] = useState(80);
+    const [fontSize, setFontSize] = useState(70);
+    const [heightCon, setHeightCon] = useState(100);
     useEffect(() => {
         const handleScroll = () => {
             const scrollPosition = window.scrollY || window.pageYOffset;
-            const newFontSize = 40 - scrollPosition * 0.01; 
-            setFontSize(newFontSize);
+            setFontSize(80 - scrollPosition * 0.05);
+            setHeightCon(100 - scrollPosition * 0.09)
         };
         window.addEventListener("scroll", handleScroll);
         return () => {
@@ -19,7 +20,9 @@ export const Main = () => {
     return (
         <Container>
             <GovernorModel />
-            <TitleMainBanner style={{ fontSize: `${fontSize}px` }}>Hello Pidor</TitleMainBanner>
+            <ContainerTitleMainBanner heightCont={`${heightCon}vh`}>
+            <TitleMainBanner fontSize={`${fontSize}px`}>Интерактивная онлайн лаборатория</TitleMainBanner>
+            </ContainerTitleMainBanner>
         </Container>
     );
 };
@@ -27,16 +30,25 @@ export const Main = () => {
 const Container = styled.div`
     width: 100%;
     height: calc(100vh + 1000px);
-    display: flex;
-    justify-content: center;
-    align-items: center;
 `;
-const TitleMainBanner = styled.p`
+const TitleMainBanner = styled.p<{fontSize:string}>`
     width: max-content;
     height: max-content;
     color:red;
+    font-size: ${(props)=>props.fontSize};
     z-index: 2;
     user-select: none;
     position: sticky;
     top:30px;
+`
+const ContainerTitleMainBanner = styled.div<{heightCont:string}>`
+    width: 100%;
+    height: ${(props)=>props.heightCont};
+    z-index: 2;
+    user-select: none;
+    position: fixed;
+    top:0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 `
