@@ -6,6 +6,7 @@ import { ModelStand } from "./components/ModelStand";
 import { ExtraLinks } from "./components/ExtraLinks";
 import { Footer } from "./components/Footer";
 import { Main } from "./page/Main";
+import { Preloader } from "./page/Preloader";
 
 function App() {
     return (
@@ -15,7 +16,8 @@ function App() {
             <ModelStand />
             <ExtraLinks />
             <Footer /> */}
-            <Main />
+            {/* <Main /> */}
+            <Preloader />
         </AppContainer>
     );
 }

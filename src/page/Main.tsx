@@ -8,7 +8,7 @@ export const Main = () => {
     useEffect(() => {
         const handleScroll = () => {
             const scrollPosition = window.scrollY || window.pageYOffset;
-            setFontSize(80 - scrollPosition * 0.05);
+            setFontSize(70 - scrollPosition * 0.05);
             setHeightCon(100 - scrollPosition * 0.09)
         };
         window.addEventListener("scroll", handleScroll);
