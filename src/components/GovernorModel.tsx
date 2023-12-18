@@ -16,7 +16,7 @@ export const Ground = () => {
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
 
     return (
-        <mesh position={[0, -10, 0]} rotation-x={-Math.PI / 2}>
+        <mesh position={[0, 0, 0]} rotation-x={-Math.PI / 2}>
             <planeGeometry args={[500, 500]} />
             <meshStandardMaterial color="grey" />
         </mesh>
@@ -27,22 +27,27 @@ export const GovernorModel = () => {
     return (
         <Container>
             <Canvas
-                style={{ height: "100%", width: "100%" }}
+                style={{ height: "100%", width: "100%", background:'black' }}
                 camera={{
-                    fov: 45,
-                    position: [0, -5, -70],
+                    fov: 40,
+                    position: [0, 0, -70],
                 }}
             >
-                <axesHelper />
-                <Sky sunPosition={[100, 20, 100]} />
+                {/* <Sky sunPosition={[100, 20, 100]} /> */}
                 <ambientLight intensity={1.5} />
-                <Ground />
+                {/* <Ground /> */}
                 <pointLight position={[10, 10, 10]} />
                 <Governor />
-                <OrbitControls />
+                {/* <OrbitControls /> */}
             </Canvas>
         </Container>
     );
 };
 
-const Container = styled.div``;
+const Container = styled.div`
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    overflow: hidden;
+    top: 0;
+`;

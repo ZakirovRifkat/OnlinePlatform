@@ -5,15 +5,17 @@ import { Info } from "./components/Info";
 import { ModelStand } from "./components/ModelStand";
 import { ExtraLinks } from "./components/ExtraLinks";
 import { Footer } from "./components/Footer";
+import { Main } from "./page/Main";
 
 function App() {
     return (
         <AppContainer>
-            <Header />
+            {/* <Header />
             <Info />
             <ModelStand />
             <ExtraLinks />
-            <Footer />
+            <Footer /> */}
+            <Main />
         </AppContainer>
     );
 }
