@@ -16,8 +16,8 @@ function App() {
             <ModelStand />
             <ExtraLinks />
             <Footer /> */}
-            <Main />
-            {/* <Preloader /> */}
+            {/* <Main /> */}
+            <Preloader />
         </AppContainer>
     );
 }
