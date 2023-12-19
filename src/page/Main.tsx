@@ -1,54 +1,46 @@
-import React, {useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { GovernorModel } from "../components/GovernorModel";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
 export const Main = () => {
-    const [fontSize, setFontSize] = useState(70);
-    const [heightCon, setHeightCon] = useState(100);
+    const [anim, setAnim] = useState(false);
+
     useEffect(() => {
-        const handleScroll = () => {
-            const scrollPosition = window.scrollY || window.pageYOffset;
-            setFontSize(70 - scrollPosition * 0.05);
-            setHeightCon(100 - scrollPosition * 0.09)
-        };
-        window.addEventListener("scroll", handleScroll);
+        const AnimeTitle = setTimeout(() => {
+            setAnim(true);
+        }, 1000);
+
         return () => {
-            window.removeEventListener("scroll", handleScroll);
+            clearTimeout(AnimeTitle);
+            console.log("Компонента размонтирована");
         };
     }, []);
 
     return (
         <Container>
             <GovernorModel />
-            <ContainerTitleMainBanner heightCont={`${heightCon}vh`}>
-            <TitleMainBanner fontSize={`${fontSize}px`}>Интерактивная онлайн лаборатория</TitleMainBanner>
-            </ContainerTitleMainBanner>
+            <TitleMainBanner animate={anim}>
+                Интерактивная онлайн лаборатория
+            </TitleMainBanner>
         </Container>
     );
 };
 
 const Container = styled.div`
     width: 100%;
-    height: calc(100vh + 1000px);
+    height: 100vh;
+    position: relative;
 `;
-const TitleMainBanner = styled.p<{fontSize:string}>`
+const TitleMainBanner = styled.p<{ animate: boolean }>`
     width: max-content;
     height: max-content;
-    color:red;
-    font-size: ${(props)=>props.fontSize};
+    color: red;
+    font-size: ${(props) => (props.animate ? "30px" : "70px")};
     z-index: 2;
     user-select: none;
-    position: sticky;
-    top:30px;
-`
-const ContainerTitleMainBanner = styled.div<{heightCont:string}>`
-    width: 100%;
-    height: ${(props)=>props.heightCont};
-    z-index: 2;
-    user-select: none;
-    position: fixed;
-    top:0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`
+    position: absolute;
+    top: ${(props) => (props.animate ? "60px" : "50%")};
+    left: 50%;
+    transform: translate(-50%, -50%);
+    transition: all 1s;
+`;
