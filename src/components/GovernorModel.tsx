@@ -31,7 +31,7 @@ const Gov = () => {
     let angle = 1;
     useFrame(() => {
         count += angle;
-        console.log(count);
+        // console.log(count);
 
         if (count > 85 || count < 30) {
             angle = -1 * angle;
