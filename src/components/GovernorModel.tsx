@@ -5,7 +5,9 @@ import { OrbitControls, useTexture } from "@react-three/drei";
 import floorTexture from "/texture.png";
 import * as THREE from "three";
 import { useEffect, useRef } from "react";
-
+import { Color } from "three";
+import { useLoader } from "@react-three/fiber";
+import { OBJLoader } from "three/examples/jsm/loaders/OBJLoader.js";
 export const Ground = () => {
     const texture = useTexture(floorTexture);
     texture.wrapS = texture.wrapT = THREE.RepeatWrapping;
@@ -18,12 +20,16 @@ export const Ground = () => {
     );
 };
 const Gov = () => {
+    const obj = useLoader(OBJLoader, "/Spindle.obj");
     const sphere = new THREE.SphereGeometry(2, 32, 32);
     const box = new THREE.BoxGeometry(10, 1.2, 1.2);
     const box2 = new THREE.CylinderGeometry(1, 1, 13);
     const groupRef: any = useRef(null);
     const groupRef2: any = useRef(null);
     const groupRef3: any = useRef(null);
+    const customMaterial = new THREE.MeshBasicMaterial({
+        color: new Color(0x000000),
+    });
     let count = 45;
     let angle = 1;
     useFrame(() => {
@@ -33,8 +39,8 @@ const Gov = () => {
         if (count > 85 || count < 30) {
             angle = -1 * angle;
         }
-        groupRef.current.rotation.y += THREE.MathUtils.degToRad(1);
-        groupRef.current.position.y += THREE.MathUtils.degToRad(angle);
+        // groupRef.current.rotation.y += THREE.MathUtils.degToRad(1);
+        // groupRef.current.position.y += THREE.MathUtils.degToRad(angle);
         groupRef2.current.rotation.z += THREE.MathUtils.degToRad(angle);
         groupRef3.current.rotation.z += THREE.MathUtils.degToRad(-angle);
     });
@@ -107,8 +113,20 @@ const Gov = () => {
                 </group>
             </group>
             {/* основа */}
-            <mesh geometry={box2} position={[0, -2, 0]} rotation={[0, 0, 0]}>
-                <meshStandardMaterial attach="material" color="silver" />
+            <mesh rotation={[0, Math.PI / 2, 0]}>
+                <primitive
+                    object={obj}
+                    scale={[5, 5, 5]}
+                    position={[-1, -5, -1.2]}
+                    material={customMaterial}
+                />
+                <mesh
+                    position={[0, 0, 0]}
+                    scale={[1, 1, 1]}
+                    geometry={new THREE.SphereGeometry(1, 16, 16)}
+                >
+                    <meshStandardMaterial attach="material" color="green" />
+                </mesh>
             </mesh>
         </>
     );
