@@ -20,16 +20,13 @@ export const Ground = () => {
     );
 };
 const Gov = () => {
-    const obj = useLoader(OBJLoader, "/Spindle.obj");
-    const sphere = new THREE.SphereGeometry(2, 32, 32);
-    const box = new THREE.BoxGeometry(10, 1.2, 1.2);
-    const box2 = new THREE.CylinderGeometry(1, 1, 13);
+    const main = useLoader(OBJLoader, "/Spindle.obj");
+    const link = useLoader(OBJLoader, "/Link.obj");
+    const link2 = useLoader(OBJLoader, "/Link2.obj");
+
     const groupRef: any = useRef(null);
-    const groupRef2: any = useRef(null);
-    const groupRef3: any = useRef(null);
-    const customMaterial = new THREE.MeshBasicMaterial({
-        color: new Color(0x000000),
-    });
+    const leftHandle: any = useRef(null);
+    const rightHandle: any = useRef(null);
     let count = 45;
     let angle = 1;
     useFrame(() => {
@@ -41,84 +38,95 @@ const Gov = () => {
         }
         // groupRef.current.rotation.y += THREE.MathUtils.degToRad(1);
         // groupRef.current.position.y += THREE.MathUtils.degToRad(angle);
-        groupRef2.current.rotation.z += THREE.MathUtils.degToRad(angle);
-        groupRef3.current.rotation.z += THREE.MathUtils.degToRad(-angle);
+        // leftHandle.current.rotation.z += THREE.MathUtils.degToRad(angle);
+        // rightHandle.current.rotation.z += THREE.MathUtils.degToRad(-angle);
     });
     return (
         <>
             <group ref={groupRef}>
                 {/* Левый  */}
-                <group position={[2, 3, 0]} ref={groupRef2}>
-                    <mesh
+                <group
+                    position={[1.05, 4.67, 0]}
+                    rotation={[0, 0, Math.PI / 6]}
+                    ref={leftHandle}
+                >
+                    {/* <mesh
                         position={[0, 0, 0]}
                         scale={[1, 1, 1]}
-                        geometry={new THREE.SphereGeometry(1, 16, 16)}
+                        geometry={new THREE.SphereGeometry(0.15, 16, 16)}
                     >
-                        <meshStandardMaterial attach="material" color="green" />
-                    </mesh>
-                    <group
-                        position={[
-                            2.25 * Math.sqrt(2),
-                            -2.25 * Math.sqrt(2),
-                            0,
-                        ]}
-                        rotation={[0, 0, -Math.PI / 4]}
-                    >
-                        {/* Прямоугольник (куб) */}
-                        <mesh geometry={box}>
-                            <meshStandardMaterial
-                                attach="material"
-                                color="red"
-                            />
-                        </mesh>
+                        <meshStandardMaterial
+                            attach="material"
+                            color="#ffffff"
+                        />
+                    </mesh> */}
 
+                    <mesh rotation={[0, 0, -Math.PI / 2]}>
+                        {/* Прямоугольник (куб) */}
+                        <primitive
+                            object={link}
+                            scale={[5, 5, 5]}
+                            position={[6.5, 1, -0.2]}
+                            rotation={[Math.PI, Math.PI, 0]}
+                        ></primitive>
                         {/* Сфера */}
                         <mesh
-                            geometry={sphere}
-                            position={[2.25 * Math.sqrt(2), 0, 0]}
-                        ></mesh>
-                    </group>
+                            position={[5.8, 0.5, 0.02]}
+                            scale={[1, 1, 1]}
+                            geometry={new THREE.SphereGeometry(0.7, 32, 32)}
+                        >
+                            <meshStandardMaterial
+                                attach="material"
+                                color="blue"
+                            />
+                        </mesh>
+                    </mesh>
                 </group>
                 {/* Правый */}
-                <group position={[-2, 3, 0]} ref={groupRef3}>
-                    <mesh
+                <group
+                    position={[-1.05, 4.67, 0]}
+                    rotation={[0, Math.PI, Math.PI / 6]}
+                    ref={rightHandle}
+                >
+                    {/* <mesh
                         position={[0, 0, 0]}
                         scale={[1, 1, 1]}
-                        geometry={new THREE.SphereGeometry(1, 16, 16)}
+                        geometry={new THREE.SphereGeometry(0.15, 16, 16)}
                     >
-                        <meshStandardMaterial attach="material" color="green" />
-                    </mesh>
-                    <group
-                        position={[
-                            -2.25 * Math.sqrt(2),
-                            -2.25 * Math.sqrt(2),
-                            0,
-                        ]}
-                        rotation={[0, 0, (-3 * Math.PI) / 4]}
-                    >
-                        {/* Прямоугольник (куб) */}
-                        <mesh geometry={box}>
-                            <meshStandardMaterial
-                                attach="material"
-                                color="red"
-                            />
-                        </mesh>
+                        <meshStandardMaterial
+                            attach="material"
+                            color="#ffffff"
+                        />
+                    </mesh> */}
 
+                    <mesh rotation={[0, 0, -Math.PI / 2]}>
+                        {/* Прямоугольник (куб) */}
+                        <primitive
+                            object={link2}
+                            scale={[5, 5, 5]}
+                            position={[6.5, 1, -0.2]}
+                            rotation={[Math.PI, Math.PI, 0]}
+                        ></primitive>
                         {/* Сфера */}
                         <mesh
-                            geometry={sphere}
-                            position={[2.25 * Math.sqrt(2), 0, 0]}
-                        ></mesh>
-                    </group>
+                            position={[5.8, 0.5, 0.02]}
+                            scale={[1, 1, 1]}
+                            geometry={new THREE.SphereGeometry(0.7, 32, 32)}
+                        >
+                            <meshStandardMaterial
+                                attach="material"
+                                color="blue"
+                            />
+                        </mesh>
+                    </mesh>
                 </group>
             </group>
             {/* основа */}
             <mesh rotation={[0, Math.PI / 2, 0]}>
                 <primitive
-                    object={obj}
+                    object={main}
                     scale={[5, 5, 5]}
                     position={[-1, -5, -1.2]}
-                    material={customMaterial}
                 />
                 <mesh
                     position={[0, 0, 0]}
