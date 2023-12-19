@@ -138,6 +138,7 @@ const layout = {
     xaxis: { title: "Time" },
     yaxis: { title: "Angle/Velocity" },
 };
+
 export const ModelCard = ({ omega }: { omega: number }) => {
     const [a, setA] = useState<{ t: any[]; solution: any[] }>({
         t: [0],
