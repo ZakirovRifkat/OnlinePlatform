@@ -31,32 +31,43 @@ export const Governor = ({ ...props }: any) => {
         Metalname("Metalness"),
     ]);
 
-    let dAngle = 0.2;
+    let dAngleUp = 0.2;
+    let dAngleDown = 0.301;
     let angleUp = 22.5;
     let angleDown = 27.7;
     let sleeve = -3.26;
-    let sleeveSpeed = 0.02;
+    let sleeveSpeed = 0.0244;
+    let speedAngle = 3;
+    let speed = -0.01;
     useFrame(() => {
         if (props.isModelLoaded) {
-            angleUp += dAngle;
-            angleDown += dAngle;
+            angleUp += dAngleUp;
+            angleDown += dAngleDown;
             sleeve += sleeveSpeed;
+            speedAngle -= speed;
             if (angleUp >= 46.8 || angleUp <= 22.5) {
-                dAngle = -1 * dAngle;
+                dAngleUp = -1 * dAngleUp;
             }
             if (angleDown >= 64.2 || angleDown <= 27.7) {
-                dAngle = -1 * dAngle;
+                dAngleDown = -1 * dAngleDown;
             }
             if (sleeve >= -0.3 || sleeve <= -3.26) {
                 sleeveSpeed = -1 * sleeveSpeed;
+                speed = -1 * speed;
             }
-            // groupRef.current.rotation.y += THREE.MathUtils.degToRad(1);
-            // leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
-            // leftHandleDown.current.rotation.x =
-            //     THREE.MathUtils.degToRad(angleDown);
-            // sleeveRef.current.position.y = sleeve;
 
-            // rightHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
+            console.log(speedAngle);
+            groupRef.current.rotation.y += THREE.MathUtils.degToRad(speedAngle);
+            leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
+            leftHandleDown.current.rotation.x =
+                THREE.MathUtils.degToRad(angleDown);
+            sleeveRef.current.position.y = sleeve;
+
+            rightHandleUp.current.rotation.z =
+                THREE.MathUtils.degToRad(angleUp);
+            rightHandleDown.current.rotation.x = THREE.MathUtils.degToRad(
+                -1 * angleDown
+            );
         }
 
         if (
@@ -155,8 +166,8 @@ export const Governor = ({ ...props }: any) => {
                 </group>
                 <group
                     ref={sleeveRef}
-                    position={[0, -3.26, 0]}
-                    // position={[0, -0.3, 0]}
+                    // position={[0, -3.26, 0]}
+                    position={[0, -0.3, 0]}
                     rotation={[0, Math.PI / 2, 0]}
                 >
                     <mesh>
@@ -182,6 +193,7 @@ export const Governor = ({ ...props }: any) => {
                         />
                     </mesh>
                     <mesh
+                        ref={rightHandleDown}
                         rotation={[-Math.PI / 6.6, 0, -Math.PI / 2]}
                         position={[0, -0.06, -1.22]}
                     >
@@ -194,7 +206,7 @@ export const Governor = ({ ...props }: any) => {
                         />
                     </mesh>
                 </group>
-                <mesh position={[-5.85, -4.8, 0]}>
+                <mesh position={[-5.825, -4.8, 0]}>
                     <Spindle
                         colorMap={MetalcolorMap}
                         displacementMap={MetaldisplacementMap}
