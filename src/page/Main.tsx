@@ -19,7 +19,7 @@ export const Main = () => {
     return (
         <Container>
             <GovernorModel />
-            <TitleMainBanner animate={anim}>
+            <TitleMainBanner $animate={anim}>
                 Интерактивная онлайн лаборатория
             </TitleMainBanner>
         </Container>
@@ -31,15 +31,15 @@ const Container = styled.div`
     height: 100vh;
     position: relative;
 `;
-const TitleMainBanner = styled.p<{ animate: boolean }>`
+const TitleMainBanner = styled.p<{ $animate: boolean }>`
     width: max-content;
     height: max-content;
     color: red;
-    font-size: ${(props) => (props.animate ? "30px" : "70px")};
+    font-size: ${(props) => (props.$animate ? "30px" : "70px")};
     z-index: 2;
     user-select: none;
     position: absolute;
-    top: ${(props) => (props.animate ? "60px" : "50%")};
+    top: ${(props) => (props.$animate ? "60px" : "50%")};
     left: 50%;
     transform: translate(-50%, -50%);
     transition: all 1s;
