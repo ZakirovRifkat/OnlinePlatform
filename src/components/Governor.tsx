@@ -24,7 +24,9 @@ export const Governor = ({...props}:any) => {
         if (count > 80 || count < 18) {
             angle = -1 * angle;
         }
-
+        // groupRef.current.rotation.y += THREE.MathUtils.degToRad(1);
+        // leftHandle.current.rotation.z += THREE.MathUtils.degToRad(angle);
+        // rightHandle.current.rotation.z += THREE.MathUtils.degToRad(angle);
         if (
             props.colorMap &&
             props.displacementMap &&

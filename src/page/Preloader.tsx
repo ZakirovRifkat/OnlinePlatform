@@ -33,10 +33,10 @@ const Container = styled(motion.div)`
     top: 0;
     z-index: 999;
 `;
-const Icon = styled.div<{ image: string }>`
+const Icon = styled.div<{ $image: string }>`
     width: 130px;
     height: 155px;
-    background-image: url(${(props) => props.image});
+    background-image: url(${(props) => props.$image});
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
