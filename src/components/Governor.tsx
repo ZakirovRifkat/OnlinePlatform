@@ -1,3 +1,4 @@
+import React, {createContext} from "react";
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useRef, useState } from "react";
@@ -8,27 +9,12 @@ import GoverLink from "./GoverLink";
 import Sleeve from "./Sleeve";
 import Knuckle from "./Knuckle";
 
-export const Governor = () => {
+export const Governor = ({...props}:any) => {
     const groupRef = useRef(null);
     const leftHandle = useRef(null);
     const rightHandle = useRef(null);
-    const [isModelLoaded, setModelLoaded] = useState(false);
 
     const stand = new THREE.CylinderGeometry(1, 3, 1, 1024);
-
-    const name = (type:any) => `/Rubber/Rubber004_1K-JPG_${type}.jpg`;
-
-    console.log('ну ?',isModelLoaded)
-
-    const [colorMap, displacementMap, normalMap, roughnessMap] = useLoader(
-        TextureLoader,
-        [
-            name("Color"),
-            name("Displacement"),
-            name("NormalGL"),
-            name("Roughness"),
-        ]
-    );
 
     let count = 45;
     let angle = 1;
@@ -40,18 +26,18 @@ export const Governor = () => {
         }
 
         if (
-            colorMap &&
-            displacementMap &&
-            normalMap &&
-            roughnessMap &&
-            !isModelLoaded
+            props.colorMap &&
+            props.displacementMap &&
+            props.normalMap &&
+            props.roughnessMap &&
+            !props.isModelLoaded
         ) {
-            setModelLoaded(true);
+            props.setModelLoaded(true);
             console.log("Model is fully loaded");
         }
     });
 
-    if (!isModelLoaded) {
+    if (!props.isModelLoaded) {
         return null
     }
 
@@ -78,10 +64,10 @@ export const Governor = () => {
                         <meshStandardMaterial
                             displacementScale={0}
                             color={"yellow"}
-                            map={colorMap}
-                            displacementMap={displacementMap}
-                            normalMap={normalMap}
-                            roughnessMap={roughnessMap}
+                            map={props.colorMap}
+                            displacementMap={props.displacementMap}
+                            normalMap={props.normalMap}
+                            roughnessMap={props.roughnessMap}
                         />
                     </mesh>
                 </mesh>
@@ -106,10 +92,10 @@ export const Governor = () => {
                         <meshStandardMaterial
                             displacementScale={0}
                             color={"yellow"}
-                            map={colorMap}
-                            displacementMap={displacementMap}
-                            normalMap={normalMap}
-                            roughnessMap={roughnessMap}
+                            map={props.colorMap}
+                            displacementMap={props.displacementMap}
+                            normalMap={props.normalMap}
+                            roughnessMap={props.roughnessMap}
                         />
                     </mesh>
                 </mesh>
@@ -143,10 +129,10 @@ export const Governor = () => {
             <meshStandardMaterial
                 displacementScale={0}
                 color={"yellow"}
-                map={colorMap}
-                displacementMap={displacementMap}
-                normalMap={normalMap}
-                roughnessMap={roughnessMap}
+                map={props.colorMap}
+                displacementMap={props.displacementMap}
+                normalMap={props.normalMap}
+                roughnessMap={props.roughnessMap}
             />
         </mesh>
         </>

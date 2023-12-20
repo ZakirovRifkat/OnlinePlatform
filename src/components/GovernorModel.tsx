@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Governor } from "./Governor";
 
-export const GovernorModel = () => {
+export const GovernorModel = ({ ...props }: any) => {
     return (
         <Container>
             <Canvas
@@ -18,7 +18,14 @@ export const GovernorModel = () => {
                     <pointLight position={[124, 10, 10]} />
                     <OrbitControls />
                     <Environment preset="warehouse" background blur={100} />
-                    <Governor />
+                    <Governor
+                        colorMap={props.colorMap}
+                        displacementMap={props.displacementMap}
+                        normalMap={props.normalMap}
+                        roughnessMap={props.roughnessMap}
+                        isModelLoaded={props.isModelLoaded}
+                        setModelLoaded={props.setModelLoaded}
+                    />
                 </scene>
             </Canvas>
         </Container>
