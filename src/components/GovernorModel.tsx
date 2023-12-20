@@ -2,12 +2,18 @@ import { Canvas } from "@react-three/fiber";
 import { styled } from "styled-components";
 import { Environment, OrbitControls } from "@react-three/drei";
 import { Governor } from "./Governor";
+import { Suspense } from "react";
+import { Preloader } from "../page/Preloader";
 
 export const GovernorModel = () => {
     return (
         <Container>
             <Canvas
-                style={{ height: "100%", width: "100%", background: "black" }}
+                style={{
+                    height: "100%",
+                    width: "100%",
+                    background: "transparent",
+                }}
                 camera={{
                     fov: 40,
                     position: [0, 0, -20],
@@ -16,9 +22,12 @@ export const GovernorModel = () => {
                 <scene backgroundIntensity={0}>
                     <ambientLight intensity={1} />
                     <pointLight position={[124, 10, 10]} />
-                    <OrbitControls />
+
+                    <OrbitControls maxDistance={20} minDistance={10} />
                     <Environment preset="warehouse" background blur={100} />
-                    <Governor />
+                    <Suspense fallback={null}>
+                        <Governor />
+                    </Suspense>
                 </scene>
             </Canvas>
         </Container>
@@ -31,4 +40,8 @@ const Container = styled.div`
     position: fixed;
     overflow: hidden;
     top: 0;
+    background-image: url("/background.png");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 `;

@@ -14,8 +14,8 @@ export const Preloader = () => {
             transition={{ duration: 0.3 }}
         >
             <ContainerIcon>
-                <Zaslon height={`${loading}%`}>
-                    <Icon image={icon} />
+                <Zaslon $height={`${loading}%`}>
+                    <Icon $image={icon} />
                 </Zaslon>
             </ContainerIcon>
         </Container>
@@ -30,10 +30,10 @@ const Container = styled(motion.div)`
     justify-content: center;
     align-items: center;
 `;
-const Icon = styled.div<{ image: string }>`
+const Icon = styled.div<{ $image: string }>`
     width: 130px;
     height: 155px;
-    background-image: url(${(props) => props.image});
+    background-image: url(${(props) => props.$image});
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -45,14 +45,14 @@ const ContainerIcon = styled.div`
     background-color: #ffffff;
     position: relative;
 `;
-const Zaslon = styled.div<{ height: string }>`
+const Zaslon = styled.div<{ $height: string }>`
     width: 130px;
     height: 100%;
     position: absolute;
     background-color: #42526b;
     top: 0;
     animation-name: identifier;
-    animation-duration: 8s;
+    animation-duration: 3s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
     transition: all 1s;
