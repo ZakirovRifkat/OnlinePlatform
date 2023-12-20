@@ -1,8 +1,13 @@
+import { useState } from "react";
 import { GovernorModel } from "../components/GovernorModel";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
+import logo from "./assets/logo.svg";
+import { UnorderedListOutlined } from "@ant-design/icons";
+import { FloatButton, Modal } from "antd";
 
 export const Content = ({ ...props }: any) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     return (
         <AnimatePresence>
             <Container
@@ -19,11 +24,47 @@ export const Content = ({ ...props }: any) => {
                     isModelLoaded={props.isModelLoaded}
                     setModelLoaded={props.setModelLoaded}
                 />
+                <Icon animate={props.isModelLoaded} alt={"logo"} src={logo} />
                 <TitleMainBanner animate={props.isModelLoaded}>
                     Интерактивная онлайн лаборатория
                 </TitleMainBanner>
+                <FloatButtonCustom setIsModalOpen={setIsModalOpen} />
+                <Modal
+                    title="Информация"
+                    open={isModalOpen}
+                    
+                    onOk={()=>{setIsModalOpen(false)}}
+                    onCancel={()=>{setIsModalOpen(false)}}
+                >
+                    <p>Окно ахуеное</p>
+                </Modal>
             </Container>
         </AnimatePresence>
+    );
+};
+
+const info = () => {
+    Modal.info({
+      title: 'This is a notification message',
+      content: (
+        <div>
+          <p>some messages...some messages...</p>
+          <p>some messages...some messages...</p>
+        </div>
+      ),
+      onOk() {},
+    });
+  };
+
+const FloatButtonCustom = ({...props}:any) => {
+    return (
+        <FloatButton.Group
+            trigger="click"
+            style={{ right: 24 }}
+            icon={<UnorderedListOutlined />}
+        >
+            <FloatButton onClick={info} />
+        </FloatButton.Group>
     );
 };
 
@@ -63,6 +104,29 @@ const TitleMainBanner = styled.p<{ animate: boolean }>`
         to {
             top: 60px;
             font-size: 45px;
+        }
+    }
+`;
+const Icon = styled.img<{ animate: boolean }>`
+    width: 80px;
+    height: 80px;
+    opacity: 0;
+    position: absolute;
+    top: 60px;
+    left: 10%;
+    transform: translate(-50%, -50%);
+    animation-name: ${(props) => (props.animate ? "animeIcon" : "")};
+    animation-duration: 0.5s;
+    animation-fill-mode: forwards;
+    animation-timing-function: linear;
+    animation-delay: 2s;
+
+    @keyframes animeIcon {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
         }
     }
 `;
