@@ -1,15 +1,10 @@
 import { styled } from "styled-components";
 import { useState } from "react";
 import "./App.css";
-import { useFrame, useLoader } from "@react-three/fiber";
+import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
-import { Header } from "./components/Header";
-import { Info } from "./components/Info";
-import { ModelStand } from "./components/ModelStand";
-import { ExtraLinks } from "./components/ExtraLinks";
-import { Footer } from "./components/Footer";
+
 import { Main } from "./page/Main";
-import { Preloader } from "./page/Preloader";
 
 function App() {
     const [isModelLoaded, setModelLoaded] = useState(false);

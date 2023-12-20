@@ -1,31 +1,17 @@
 import { useGLTF } from "@react-three/drei";
-import { TextureLoader } from "three/src/loaders/TextureLoader.js";
-import { useLoader } from "@react-three/fiber";
-import { useEffect } from "react";
 
-export default function Sleeve() {
+export default function Sleeve({ ...props }: any) {
     const model: any = useGLTF("/sleeve.glb");
 
-    const name = (type: any) => `/Metal/Metal035_1K-JPG_${type}.jpg`;
 
-    const [colorMap, displacementMap, normalMap, roughnessMap, Metalness] =
-        useLoader(TextureLoader, [
-            name("Color"),
-            name("Displacement"),
-            name("NormalDX"),
-            name("Roughness"),
-            name("Metalness"),
-        ]);
-
-    useEffect(() => {
         // Настройка свойств материала из GLTF-модели
         model.nodes.Sleeve.material.displacementScale = 0;
-        model.nodes.Sleeve.material.map = colorMap;
-        model.nodes.Sleeve.material.displacementMap = displacementMap;
-        model.nodes.Sleeve.material.normalMap = normalMap;
-        model.nodes.Sleeve.material.roughnessMap = roughnessMap;
-        model.nodes.Sleeve.material.metalnessMap = Metalness;
-    }, []);
+        model.nodes.Sleeve.material.map = props.colorMap;
+        model.nodes.Sleeve.material.displacementMap = props.displacementMap;
+        model.nodes.Sleeve.material.normalMap = props.normalMap;
+        model.nodes.Sleeve.material.roughnessMap = props.roughnessMap;
+        model.nodes.Sleeve.material.metalnessMap = props.Metalness;
+
 
     return (
         <mesh

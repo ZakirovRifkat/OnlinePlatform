@@ -52,6 +52,7 @@ const ContainerIcon = styled.div`
     height: 163px;
     background-color: #ffffff;
     position: relative;
+    margin: auto;
 `;
 const Zaslon = styled.div`
     width: 140px;

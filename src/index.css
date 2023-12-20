@@ -9,7 +9,9 @@
     --container: 95%;
     --max-container: 1600px;
 }
-
+html {
+    overflow: hidden;
+}
 body {
     margin: 0;
     min-width: 320px;

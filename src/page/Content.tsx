@@ -33,11 +33,11 @@ const Container = styled(motion.div)`
     height: 100vh;
     position: relative;
 `;
-const TitleMainBanner = styled.p<{animate:boolean}>`
+const TitleMainBanner = styled.p<{ animate: boolean }>`
     width: max-content;
     height: max-content;
     color: red;
-    font-size:70px;
+    font-size: 70px;
     z-index: 2;
     user-select: none;
     position: absolute;
@@ -46,11 +46,11 @@ const TitleMainBanner = styled.p<{animate:boolean}>`
     transform: translate(-50%, -50%);
     transition: all 1s;
 
-    animation-name: ${(props)=>props.animate? 'anime':''};
+    animation-name: ${(props) => (props.animate ? "anime" : "")};
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
-    animation-delay: 1s;
+    animation-delay: 2.5s;
 
     @keyframes anime {
         from {
