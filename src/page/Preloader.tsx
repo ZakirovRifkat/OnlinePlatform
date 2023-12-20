@@ -13,7 +13,7 @@ export const Preloader = ({ ...props }) => {
             >
                 <ContainerIcon>
                     <Zaslon>
-                        <Icon image={icon} />
+                        <Icon $image={icon} />
                     </Zaslon>
                 </ContainerIcon>
             </Container>}
