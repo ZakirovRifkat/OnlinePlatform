@@ -10,7 +10,7 @@ export const Main = () => {
     useEffect(() => {
         const AnimeTitle = setTimeout(() => {
             setLoading(false);
-        }, 8500);
+        }, 1000);
 
         return () => {
             clearTimeout(AnimeTitle);
