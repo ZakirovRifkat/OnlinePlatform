@@ -10,9 +10,11 @@ import Knuckle from "./Knuckle";
 
 export const Governor = ({ ...props }: any) => {
     const groupRef: any = useRef(null);
-    const leftHandle = useRef(null);
-    const rightHandle = useRef(null);
-
+    const leftHandleUp: any = useRef(null);
+    const rightHandleUp: any = useRef(null);
+    const leftHandleDown: any = useRef(null);
+    const rightHandleDown: any = useRef(null);
+    const sleeveRef: any = useRef(null);
     const stand = new THREE.CylinderGeometry(1, 3, 1, 1024);
     const Metalname = (type: any) => `/Metal/Metal035_1K-JPG_${type}.jpg`;
     const [
@@ -29,17 +31,33 @@ export const Governor = ({ ...props }: any) => {
         Metalname("Metalness"),
     ]);
 
-    let count = 45;
-    let angle = 1;
+    let dAngle = 0.2;
+    let angleUp = 22.5;
+    let angleDown = 27.7;
+    let sleeve = -3.26;
+    let sleeveSpeed = 0.02;
     useFrame(() => {
-        count += angle;
+        if (props.isModelLoaded) {
+            angleUp += dAngle;
+            angleDown += dAngle;
+            sleeve += sleeveSpeed;
+            if (angleUp >= 46.8 || angleUp <= 22.5) {
+                dAngle = -1 * dAngle;
+            }
+            if (angleDown >= 64.2 || angleDown <= 27.7) {
+                dAngle = -1 * dAngle;
+            }
+            if (sleeve >= -0.3 || sleeve <= -3.26) {
+                sleeveSpeed = -1 * sleeveSpeed;
+            }
+            // groupRef.current.rotation.y += THREE.MathUtils.degToRad(1);
+            // leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
+            // leftHandleDown.current.rotation.x =
+            //     THREE.MathUtils.degToRad(angleDown);
+            // sleeveRef.current.position.y = sleeve;
 
-        if (count > 80 || count < 18) {
-            angle = -1 * angle;
+            // rightHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
         }
-        // groupRef.current.rotation.y += THREE.MathUtils.degToRad(1);
-        // leftHandle.current.rotation.z += THREE.MathUtils.degToRad(angle);
-        // rightHandle.current.rotation.z += THREE.MathUtils.degToRad(angle);
 
         if (
             props.colorMap &&
@@ -67,9 +85,9 @@ export const Governor = ({ ...props }: any) => {
             <group ref={groupRef}>
                 {/* Левый  */}
                 <group
-                    position={[1.078, 4.68, 0]}
+                    position={[1.05, 4.74, 0]}
                     rotation={[0, 0, Math.PI / 8]}
-                    ref={leftHandle}
+                    ref={leftHandleUp}
                 >
                     <mesh
                         rotation={[0, 0, -Math.PI / 2]}
@@ -84,6 +102,7 @@ export const Governor = ({ ...props }: any) => {
                         />
                         {/* Сфера */}
                         <mesh
+                            rotation={[0, 0, Math.PI / 2]}
                             position={[5.8, 0.5, 0.02]}
                             scale={1}
                             geometry={new THREE.SphereGeometry(0.7, 128, 128)}
@@ -101,9 +120,9 @@ export const Governor = ({ ...props }: any) => {
                 </group>
                 {/* Правый */}
                 <group
-                    position={[-1.14, 4.68, 0]}
+                    position={[-1.086, 4.74, 0]}
                     rotation={[0, Math.PI, Math.PI / 8]}
-                    ref={rightHandle}
+                    ref={rightHandleUp}
                 >
                     <mesh
                         rotation={[0, 0, -Math.PI / 2]}
@@ -118,6 +137,7 @@ export const Governor = ({ ...props }: any) => {
                         />
                         {/* Сфера */}
                         <mesh
+                            rotation={[0, 0, Math.PI / 2]}
                             position={[5.8, 0.5, 0.02]}
                             scale={1}
                             geometry={new THREE.SphereGeometry(0.7, 128, 128)}
@@ -134,7 +154,8 @@ export const Governor = ({ ...props }: any) => {
                     </mesh>
                 </group>
                 <group
-                    position={[0, -3.24, 0]}
+                    ref={sleeveRef}
+                    position={[0, -3.26, 0]}
                     // position={[0, -0.3, 0]}
                     rotation={[0, Math.PI / 2, 0]}
                 >
@@ -148,7 +169,8 @@ export const Governor = ({ ...props }: any) => {
                         />
                     </mesh>
                     <mesh
-                        rotation={[Math.PI / 6.5, 0, -Math.PI / 2]}
+                        ref={leftHandleDown}
+                        rotation={[Math.PI / 6.6, 0, -Math.PI / 2]}
                         position={[0, -0.06, 1.18]}
                     >
                         <Knuckle
@@ -160,7 +182,7 @@ export const Governor = ({ ...props }: any) => {
                         />
                     </mesh>
                     <mesh
-                        rotation={[-Math.PI / 6.5, 0, -Math.PI / 2]}
+                        rotation={[-Math.PI / 6.6, 0, -Math.PI / 2]}
                         position={[0, -0.06, -1.22]}
                     >
                         <Knuckle

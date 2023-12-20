@@ -22,10 +22,10 @@ export const GovernorModel = ({ ...props }: any) => {
                     <pointLight position={[124, 10, 10]} />
 
                     <OrbitControls
-                        maxDistance={20}
-                        minDistance={20}
-                        enablePan={false}
-                        enabled={false}
+                        // maxDistance={20}
+                        // minDistance={20}
+                        // enablePan={false}
+                        // enabled={props.orbit}
                     />
                     <Environment preset="warehouse" background blur={100} />
 

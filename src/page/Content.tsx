@@ -7,10 +7,22 @@ import { UnorderedListOutlined } from "@ant-design/icons";
 import { FloatButton, Modal } from "antd";
 import { ControlPanel } from "../components/ControlPanel";
 import { ModalControl } from "../components/ModalControl";
+import { message } from "antd";
+import { AimOutlined } from "@ant-design/icons";
 
 export const Content = ({ ...props }: any) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [controlValue, setControl] = useState<null | string>(null);
+    const [isOrbit, setOrbit] = useState(false);
+    const [messageApi, contextHolder] = message.useMessage();
+
+    const success = (message: string) => {
+        messageApi.success(message);
+    };
+    const warn = (message: string) => {
+        messageApi.error(message);
+    };
+
     return (
         <AnimatePresence>
             <Container
@@ -19,6 +31,7 @@ export const Content = ({ ...props }: any) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1 }}
             >
+                {contextHolder}
                 <GovernorModel
                     colorMap={props.colorMap}
                     displacementMap={props.displacementMap}
@@ -26,6 +39,7 @@ export const Content = ({ ...props }: any) => {
                     roughnessMap={props.roughnessMap}
                     isModelLoaded={props.isModelLoaded}
                     setModelLoaded={props.setModelLoaded}
+                    orbit={isOrbit}
                 />
                 <Icon animate={props.isModelLoaded} alt={"logo"} src={logo} />
                 <TitleMainBanner animate={props.isModelLoaded}>
@@ -61,8 +75,11 @@ const info = () => {
             </div>
         ),
         onOk() {},
+        
     });
 };
+
+
 
 const FloatButtonCustom = ({ ...props }: any) => {
     return (
@@ -116,12 +133,12 @@ const TitleMainBanner = styled.p<{ animate: boolean }>`
     }
 `;
 const Icon = styled.img<{ animate: boolean }>`
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     opacity: 0;
     position: absolute;
     top: 60px;
-    left: 10%;
+    left: 6%;
     transform: translate(-50%, -50%);
     animation-name: ${(props) => (props.animate ? "animeIcon" : "")};
     animation-duration: 0.5s;
