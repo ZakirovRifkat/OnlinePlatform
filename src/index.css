@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&display=swap");
 :root {
     font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
 
@@ -8,6 +9,7 @@
     -webkit-text-size-adjust: 100%;
     --container: 95%;
     --max-container: 1600px;
+    --font: "Cormorant Garamond", serif;
 }
 html {
     overflow: hidden;

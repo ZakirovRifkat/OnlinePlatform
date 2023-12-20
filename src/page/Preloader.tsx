@@ -10,7 +10,7 @@ export const Preloader = ({ ...props }) => {
                 <Container
                     initial={{ opacity: 1, scale: 1 }}
                     exit={{ opacity: 0, scale: 6 }}
-                    transition={{ duration: 2 }}
+                    transition={{ duration: 1 }}
                 >
                     <ContainerIcon>
                         <Icon $image={icon} />

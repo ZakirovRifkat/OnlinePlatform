@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
 import { GovernorModel } from "../components/GovernorModel";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 
 export const Content = ({ ...props }: any) => {
@@ -36,7 +35,6 @@ const Container = styled(motion.div)`
 const TitleMainBanner = styled.p<{ animate: boolean }>`
     width: max-content;
     height: max-content;
-    color: red;
     font-size: 70px;
     z-index: 2;
     user-select: none;
@@ -46,11 +44,16 @@ const TitleMainBanner = styled.p<{ animate: boolean }>`
     transform: translate(-50%, -50%);
     transition: all 1s;
 
+    color: #52380a;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-family: var(--font);
+
     animation-name: ${(props) => (props.animate ? "anime" : "")};
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
-    animation-delay: 2.5s;
+    animation-delay: 1.5s;
 
     @keyframes anime {
         from {
@@ -59,28 +62,7 @@ const TitleMainBanner = styled.p<{ animate: boolean }>`
         }
         to {
             top: 60px;
-            font-size: 30px;
-        }
-    }
-`;
-const Zaslon = styled.div<{ $height: string }>`
-    width: 130px;
-    height: 100%;
-    position: absolute;
-    background-color: #838e9e;
-    top: 0;
-    animation-name: identifier;
-    animation-duration: 3s;
-    animation-fill-mode: forwards;
-    animation-timing-function: linear;
-    transition: all 1s;
-
-    @keyframes identifier {
-        from {
-            height: 100%;
-        }
-        to {
-            height: 0%;
+            font-size: 45px;
         }
     }
 `;
