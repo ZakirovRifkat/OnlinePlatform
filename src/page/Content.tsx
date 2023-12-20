@@ -5,9 +5,12 @@ import { AnimatePresence, motion } from "framer-motion";
 import logo from "./assets/logo.svg";
 import { UnorderedListOutlined } from "@ant-design/icons";
 import { FloatButton, Modal } from "antd";
+import { ControlPanel } from "../components/ControlPanel";
+import { ModalControl } from "../components/ModalControl";
 
 export const Content = ({ ...props }: any) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [controlValue, setControl] = useState<null | string>(null);
     return (
         <AnimatePresence>
             <Container
@@ -32,12 +35,17 @@ export const Content = ({ ...props }: any) => {
                 <Modal
                     title="Информация"
                     open={isModalOpen}
-                    
-                    onOk={()=>{setIsModalOpen(false)}}
-                    onCancel={()=>{setIsModalOpen(false)}}
+                    onOk={() => {
+                        setIsModalOpen(false);
+                    }}
+                    onCancel={() => {
+                        setIsModalOpen(false);
+                    }}
                 >
                     <p>Окно ахуеное</p>
                 </Modal>
+                <ControlPanel controlValue={controlValue} setControl={setControl} />
+                <ModalControl controlValue={controlValue} />
             </Container>
         </AnimatePresence>
     );
@@ -45,18 +53,18 @@ export const Content = ({ ...props }: any) => {
 
 const info = () => {
     Modal.info({
-      title: 'This is a notification message',
-      content: (
-        <div>
-          <p>some messages...some messages...</p>
-          <p>some messages...some messages...</p>
-        </div>
-      ),
-      onOk() {},
+        title: "This is a notification message",
+        content: (
+            <div>
+                <p>some messages...some messages...</p>
+                <p>some messages...some messages...</p>
+            </div>
+        ),
+        onOk() {},
     });
-  };
+};
 
-const FloatButtonCustom = ({...props}:any) => {
+const FloatButtonCustom = ({ ...props }: any) => {
     return (
         <FloatButton.Group
             trigger="click"
