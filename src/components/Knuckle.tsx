@@ -1,11 +1,10 @@
-import { useRef } from "react";
+import { useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import { TextureLoader } from "three/src/loaders/TextureLoader.js";
 import { useLoader } from "@react-three/fiber";
 
 export default function Knuckle() {
     const model: any = useGLTF("/knuckle.glb");
-    const meshRef = useRef(null);
 
     const name = (type: any) => `/Metal/Metal035_1K-JPG_${type}.jpg`;
 
@@ -18,17 +17,18 @@ export default function Knuckle() {
             name("Metalness"),
         ]);
 
-    // Настройка свойств материала из GLTF-модели
-    model.nodes.Knuckle.material.displacementScale = 0;
-    model.nodes.Knuckle.material.map = colorMap;
-    model.nodes.Knuckle.material.displacementMap = displacementMap;
-    model.nodes.Knuckle.material.normalMap = normalMap;
-    model.nodes.Knuckle.material.roughnessMap = roughnessMap;
-    model.nodes.Knuckle.material.metalnessMap = Metalness;
+    useEffect(() => {
+        // Настройка свойств материала из GLTF-модели
+        model.nodes.Knuckle.material.displacementScale = 0;
+        model.nodes.Knuckle.material.map = colorMap;
+        model.nodes.Knuckle.material.displacementMap = displacementMap;
+        model.nodes.Knuckle.material.normalMap = normalMap;
+        model.nodes.Knuckle.material.roughnessMap = roughnessMap;
+        model.nodes.Knuckle.material.metalnessMap = Metalness;
+    }, []);
 
     return (
         <mesh
-            ref={meshRef}
             geometry={model.nodes.Knuckle.geometry}
             material={model.nodes.Knuckle.material}
             scale={5}

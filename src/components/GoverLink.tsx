@@ -1,14 +1,12 @@
-import { useRef } from "react";
+import { useEffect } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three/src/loaders/TextureLoader.js";
 
 export default function GoverLink() {
     const model: any = useGLTF("/link.glb");
-    const meshRef: any = useRef(null);
 
     const name = (type: any) => `/Metal/Metal035_1K-JPG_${type}.jpg`;
-
     const [colorMap, displacementMap, normalMap, roughnessMap, Metalness] =
         useLoader(TextureLoader, [
             name("Color"),
@@ -18,16 +16,18 @@ export default function GoverLink() {
             name("Metalness"),
         ]);
 
-    model.nodes.Link.material.map = colorMap;
-    model.nodes.Link.material.displacementScale = 0;
-    model.nodes.Link.material.displacementMap = displacementMap;
-    model.nodes.Link.material.normalMap = normalMap;
-    model.nodes.Link.material.roughnessMap = roughnessMap;
-    model.nodes.Link.material.metalnessMap = Metalness;
+    useEffect(() => {
+        // Настройка свойств материала из GLTF-модели
+        model.nodes.Link.material.map = colorMap;
+        model.nodes.Link.material.displacementScale = 0;
+        model.nodes.Link.material.displacementMap = displacementMap;
+        model.nodes.Link.material.normalMap = normalMap;
+        model.nodes.Link.material.roughnessMap = roughnessMap;
+        model.nodes.Link.material.metalnessMap = Metalness;
+    }, []);
 
     return (
         <mesh
-            ref={meshRef}
             geometry={model.nodes.Link.geometry}
             material={model.nodes.Link.material}
             scale={5}
