@@ -6,18 +6,18 @@ export const Preloader = ({ ...props }) => {
     console.log("loader", props.isModelLoaded);
     return (
         <AnimatePresence>
-            {props.isModelLoaded? null : <Container
-                initial={{ opacity: 1, scale:1 }}
-                exit={{ opacity: 0, scale:10 }}
-                transition={{ duration: 0.5 }}
-            >
-                <ContainerIcon>
-                    <Zaslon>
+            {props.isModelLoaded ? null : (
+                <Container
+                    initial={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 6 }}
+                    transition={{ duration: 2 }}
+                >
+                    <ContainerIcon>
                         <Icon $image={icon} />
-                    </Zaslon>
-                </ContainerIcon>
-            </Container>}
-            
+                        <Zaslon />
+                    </ContainerIcon>
+                </Container>
+            )}
         </AnimatePresence>
     );
 };
@@ -34,28 +34,33 @@ const Container = styled(motion.div)`
     z-index: 999;
 `;
 const Icon = styled.div<{ $image: string }>`
-    width: 130px;
-    height: 155px;
+    width: 160px;
+    height: 183px;
     background-image: url(${(props) => props.$image});
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
     flex-shrink: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
 `;
 const ContainerIcon = styled.div`
-    width: 130px;
-    height: 153px;
+    width: 140px;
+    height: 163px;
     background-color: #ffffff;
     position: relative;
 `;
 const Zaslon = styled.div`
-    width: 130px;
-    height: 100%;
+    width: 140px;
+    height: 163px;
     position: absolute;
     background-color: #42526b;
+    z-index: 1;
     top: 0;
     transition: all 1s;
-    transform-origin: center;
     animation: identifier 1.5s linear infinite alternate;
     @keyframes identifier {
         from {
