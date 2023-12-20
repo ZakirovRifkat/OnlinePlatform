@@ -9,6 +9,7 @@ export const Content = () => {
     useEffect(() => {
         const AnimeTitle = setTimeout(() => {
             setAnim(true);
+            console.log('rereerr')
         }, 1000);
 
         return () => {

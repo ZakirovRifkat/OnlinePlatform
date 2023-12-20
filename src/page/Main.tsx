@@ -19,12 +19,9 @@ export const Main = () => {
     }, []);
 
     return (
-        <Container>
-            <GovernorModel />
-            <TitleMainBanner animate={anim}>
-                Интерактивная онлайн лаборатория
-            </TitleMainBanner>
-        </Container>
+        <AnimatePresence>
+            <Container>{loading ? <Preloader /> : <Content />}</Container>
+        </AnimatePresence>
     );
 };
 
