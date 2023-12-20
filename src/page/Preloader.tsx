@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import icon from "./assets/Subtract.svg";
+import { motion } from "framer-motion";
 
 export const Preloader = () => {
     const [loading, setLoading] = useState(100);
 
     return (
-        <Container>
+        <Container
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+        >
             <ContainerIcon>
                 <Zaslon height={`${loading}%`}>
                     <Icon image={icon} />
@@ -16,7 +22,7 @@ export const Preloader = () => {
     );
 };
 
-const Container = styled.div`
+const Container = styled(motion.div)`
     width: 100vw;
     height: 100vh;
     background-color: #838e9e;
