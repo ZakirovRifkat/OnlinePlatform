@@ -24,11 +24,6 @@ function App() {
 
     return (
         <AppContainer>
-            {/* <Header />
-            <Info />
-            <ModelStand />
-            <ExtraLinks />
-            <Footer /> */}
             <Main
                 colorMap={colorMap}
                 displacementMap={displacementMap}
@@ -37,7 +32,6 @@ function App() {
                 isModelLoaded={isModelLoaded}
                 setModelLoaded={setModelLoaded}
             />
-            {/* <Preloader /> */}
         </AppContainer>
     );
 }

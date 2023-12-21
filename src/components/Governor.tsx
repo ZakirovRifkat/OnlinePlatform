@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Spindle from "./Spindle";
@@ -40,6 +40,25 @@ export const Governor = ({ ...props }: any) => {
     let speedAngle = 3;
     let speed = -0.01;
 
+    useEffect(() => {
+        if (props.isModelLoaded && props.play) {
+            let index = 0;
+
+            const updateRotation = () => {
+                if (index < props.solution.length) {
+                    const el = props.solution[index];
+                    console.log(el[0]);
+                    speed = el[0] / 100;
+
+                    index++;
+                    setTimeout(updateRotation, 10); // Рекурсивный вызов с задержкой
+                }
+            };
+
+            updateRotation(); // Запускаем первый вызов
+        }
+    }, [props.play]);
+
     useFrame(() => {
         if (props.isModelLoaded && props.play) {
             angleUp += dAngleUp;
@@ -56,8 +75,7 @@ export const Governor = ({ ...props }: any) => {
                 sleeveSpeed = -1 * sleeveSpeed;
                 speed = -1 * speed;
             }
-
-            groupRef.current.rotation.y += THREE.MathUtils.degToRad(speedAngle);
+            groupRef.current.rotation.y += speed;
             leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
             leftHandleDown.current.rotation.x =
                 THREE.MathUtils.degToRad(angleDown);
@@ -69,7 +87,6 @@ export const Governor = ({ ...props }: any) => {
                 -1 * angleDown
             );
         }
-
         if (
             props.colorMap &&
             props.displacementMap &&

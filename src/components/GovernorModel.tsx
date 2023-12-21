@@ -37,6 +37,7 @@ export const GovernorModel = ({ ...props }: any) => {
                         isModelLoaded={props.isModelLoaded}
                         setModelLoaded={props.setModelLoaded}
                         play={props.play}
+                        solution={props.solution}
                     />
                 </scene>
             </Canvas>

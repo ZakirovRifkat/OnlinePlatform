@@ -7,23 +7,38 @@ import { AnimatePresence } from "framer-motion";
 export const ModalControl = ({ ...props }: any) => {
     return (
         <AnimatePresence>
-            <Container>
+            <Container $shadow={props.controlValue === "params"}>
                 {props.controlValue === "info" ? (
                     <InfoControl />
                 ) : props.controlValue === "params" ? (
-                    <ParamControl />
+                    <ParamControl
+                        setPlay={props.setPlay}
+                        setAParams={props.setAParams}
+                        setF0Params={props.setF0Params}
+                        setMParams={props.setMParams}
+                        aParams={props.aParams}
+                        f0Params={props.f0Params}
+                        mParams={props.mParams}
+                        initialConditions={props.initialConditions}
+                        setInitialConditins={props.setInitialConditins}
+                    />
                 ) : props.controlValue === "graphic" ? (
-                    <GraphicControl />
+                    <GraphicControl
+                        tData={props.tData}
+                        solution={props.solution}
+                    />
                 ) : null}
             </Container>
         </AnimatePresence>
     );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ $shadow?: boolean }>`
     width: max-content;
     height: max-content;
-    background-color: white;
+
+    box-shadow: ${(props) =>
+        props.$shadow ? "" : "0px 0px 8px 2px rgba(0, 0, 0, 0.2)"};
     border-radius: 20px;
     overflow: hidden;
     position: absolute;
