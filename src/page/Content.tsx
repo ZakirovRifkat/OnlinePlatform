@@ -3,25 +3,14 @@ import { GovernorModel } from "../components/GovernorModel";
 import styled from "styled-components";
 import { AnimatePresence, motion } from "framer-motion";
 import logo from "./assets/logo.svg";
-import { UnorderedListOutlined } from "@ant-design/icons";
-import { FloatButton, Modal } from "antd";
 import { ControlPanel } from "../components/ControlPanel";
 import { ModalControl } from "../components/ModalControl";
-import { message } from "antd";
-import { AimOutlined } from "@ant-design/icons";
+import { ConfigProvider } from "antd";
 
 export const Content = ({ ...props }: any) => {
-    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isPlay, setIsPlay] = useState(false);
     const [controlValue, setControl] = useState<null | string>(null);
     const [isOrbit, setOrbit] = useState(false);
-    const [messageApi, contextHolder] = message.useMessage();
-
-    const success = (message: string) => {
-        messageApi.success(message);
-    };
-    const warn = (message: string) => {
-        messageApi.error(message);
-    };
 
     return (
         <AnimatePresence>
@@ -31,7 +20,6 @@ export const Content = ({ ...props }: any) => {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 1 }}
             >
-                {contextHolder}
                 <GovernorModel
                     colorMap={props.colorMap}
                     displacementMap={props.displacementMap}
@@ -40,56 +28,39 @@ export const Content = ({ ...props }: any) => {
                     isModelLoaded={props.isModelLoaded}
                     setModelLoaded={props.setModelLoaded}
                     orbit={isOrbit}
+                    play={isPlay}
                 />
                 <Icon animate={props.isModelLoaded} alt={"logo"} src={logo} />
                 <TitleMainBanner animate={props.isModelLoaded}>
-                    Интерактивная онлайн лаборатория
+                    Интерактивная онлайн–лаборатория
                 </TitleMainBanner>
-                <FloatButtonCustom setIsModalOpen={setIsModalOpen} />
-                <Modal
-                    title="Информация"
-                    open={isModalOpen}
-                    onOk={() => {
-                        setIsModalOpen(false);
-                    }}
-                    onCancel={() => {
-                        setIsModalOpen(false);
+
+                <ControlPanel
+                    controlValue={controlValue}
+                    setControl={setControl}
+                    isOrbit={isOrbit}
+                    setOrbit={setOrbit}
+                    setPlay={setIsPlay}
+                    play={isPlay}
+                />
+                <ConfigProvider
+                    theme={{
+                        token: {
+                            fontFamily: `"Cormorant Garamond", serif`,
+                        },
                     }}
                 >
-                    <p>Окно ахуеное</p>
-                </Modal>
-                <ControlPanel controlValue={controlValue} setControl={setControl} />
-                <ModalControl controlValue={controlValue} />
+                    <ModalControl controlValue={controlValue} />
+                </ConfigProvider>
+                <Footer>
+                    <span>
+                        СПБГУ. Математико-механический факультет. Кафедра
+                        прикладной кибернетики.
+                    </span>
+                    <span>Закиров Р.Э</span>
+                </Footer>
             </Container>
         </AnimatePresence>
-    );
-};
-
-const info = () => {
-    Modal.info({
-        title: "This is a notification message",
-        content: (
-            <div>
-                <p>some messages...some messages...</p>
-                <p>some messages...some messages...</p>
-            </div>
-        ),
-        onOk() {},
-        
-    });
-};
-
-
-
-const FloatButtonCustom = ({ ...props }: any) => {
-    return (
-        <FloatButton.Group
-            trigger="click"
-            style={{ right: 24 }}
-            icon={<UnorderedListOutlined />}
-        >
-            <FloatButton onClick={info} />
-        </FloatButton.Group>
     );
 };
 
@@ -154,4 +125,16 @@ const Icon = styled.img<{ animate: boolean }>`
             opacity: 1;
         }
     }
+`;
+const Footer = styled.div`
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    padding: 0 1em;
+    bottom: 0.6em;
+    left: 0;
+    font-family: var(--font);
+    color: #00000073;
+    font-size: 20px;
 `;

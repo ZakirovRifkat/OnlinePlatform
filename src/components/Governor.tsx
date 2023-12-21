@@ -35,12 +35,13 @@ export const Governor = ({ ...props }: any) => {
     let dAngleDown = 0.301;
     let angleUp = 22.5;
     let angleDown = 27.7;
-    let sleeve = -3.26;
-    let sleeveSpeed = 0.0244;
+    let sleeve = -3.3;
+    let sleeveSpeed = 0.02465;
     let speedAngle = 3;
     let speed = -0.01;
+
     useFrame(() => {
-        if (props.isModelLoaded) {
+        if (props.isModelLoaded && props.play) {
             angleUp += dAngleUp;
             angleDown += dAngleDown;
             sleeve += sleeveSpeed;
@@ -51,12 +52,11 @@ export const Governor = ({ ...props }: any) => {
             if (angleDown >= 64.2 || angleDown <= 27.7) {
                 dAngleDown = -1 * dAngleDown;
             }
-            if (sleeve >= -0.3 || sleeve <= -3.26) {
+            if (sleeve >= -0.3 || sleeve <= -3.3) {
                 sleeveSpeed = -1 * sleeveSpeed;
                 speed = -1 * speed;
             }
 
-            console.log(speedAngle);
             groupRef.current.rotation.y += THREE.MathUtils.degToRad(speedAngle);
             leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
             leftHandleDown.current.rotation.x =
@@ -114,7 +114,7 @@ export const Governor = ({ ...props }: any) => {
                         {/* Сфера */}
                         <mesh
                             rotation={[0, 0, Math.PI / 2]}
-                            position={[5.8, 0.5, 0.02]}
+                            position={[5.94, 0.5, 0.02]}
                             scale={1}
                             geometry={new THREE.SphereGeometry(0.7, 128, 128)}
                         >
@@ -149,7 +149,7 @@ export const Governor = ({ ...props }: any) => {
                         {/* Сфера */}
                         <mesh
                             rotation={[0, 0, Math.PI / 2]}
-                            position={[5.8, 0.5, 0.02]}
+                            position={[5.94, 0.5, 0.02]}
                             scale={1}
                             geometry={new THREE.SphereGeometry(0.7, 128, 128)}
                         >
@@ -166,8 +166,8 @@ export const Governor = ({ ...props }: any) => {
                 </group>
                 <group
                     ref={sleeveRef}
-                    // position={[0, -3.26, 0]}
-                    position={[0, -0.3, 0]}
+                    position={[0, -3.3, 0]}
+                    // position={[0, -0.3, 0]}
                     rotation={[0, Math.PI / 2, 0]}
                 >
                     <mesh>

@@ -1,23 +1,77 @@
-import React from "react";
+import { Flex, Typography } from "antd";
 import { motion } from "framer-motion";
 import styled from "styled-components";
 
+export const InfoControl = () => {
+    return (
+        <Container
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5 }}
+        >
+            <Typography.Title level={2}>Теория</Typography.Title>
+            <Typography.Text style={{ fontSize: 18 }}>
+                Центробежный регулятор Уотта (Watt centrifugal governor) — это
+                механическое устройство, разработанное Джеймсом Уаттом в 1788
+                году для автоматического регулирования скорости вращения
+                парового двигателя. Этот регулятор был важной частью первых
+                паровых машин и является одним из ключевых изобретений
+                индустриальной эпохи. Вот как это работает:
+                <p>
+                    <b>Основной принцип: </b>
+                    Центробежный регулятор использует центробежные силы,
+                    создаваемые вращением, для регулирования работы двигателя.{" "}
+                </p>
+                <p>
+                    <b>Строение: </b>
+                    Он состоит из двух вращающихся масс, прикрепленных к
+                    рукояткам и расположенных по обе стороны от оси вращения.
+                    Массы соединены между собой рычагом.{" "}
+                </p>
+                <p>
+                    <b>Действие: </b> При увеличении скорости вращения двигателя
+                    центробежные силы сталкиваются с массами регулятора,
+                    поднимая их вверх. Это действие приводит к уменьшению
+                    открытия заслонок парового распределителя или других
+                    устройств, регулирующих подачу пара в цилиндры.
+                </p>
+                <p>
+                    <b>Обратная связь: </b>
+                    Уменьшение подачи пара в цилиндры замедляет вращение
+                    двигателя, что в свою очередь снижает центробежные силы,
+                    опуская массы регулятора. Это ведет к увеличению подачи пара
+                    и повторному увеличению скорости вращения. Таким образом,
+                    центробежный регулятор Уотта обеспечивает автоматическое
+                    поддержание постоянной скорости вращения парового двигателя
+                    при изменении нагрузки. Этот принцип регулирования был
+                    важным шагом в развитии промышленных процессов, так как он
+                    позволял эффективнее использовать паровую энергию для работы
+                    машин.
+                </p>
+                <p>
+                    <b>Уравнения описывающие систему: </b>
+                    <Flex vertical align={"center"}>
+                        <img src="formuls.jpg" style={{ width: "80%" }}></img>
+                    </Flex>
+                </p>
+            </Typography.Text>
+        </Container>
+    );
+};
 
-export const InfoControl=()=>{
-    return(
-<Container
-  initial={{ opacity: 0 }}
-  animate={{ opacity: 1 }}
-  exit={{ opacity: 0 }}
-  transition={{ duration: 0.5 }}
->
-    Info
-</Container>
-    )
-}
-
-const Container=styled(motion.div)`
+const Container = styled(motion.div)`
+    max-width: 500px;
+    max-height: 600px;
     width: max-content;
     height: max-content;
     padding: 20px 10px;
-`
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+        width: 3px;
+        background-color: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: silver;
+    }
+`;

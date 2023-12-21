@@ -13,8 +13,8 @@ export const GovernorModel = ({ ...props }: any) => {
                     background: "transparent",
                 }}
                 camera={{
-                    fov: 40,
-                    position: [0, 0, -20],
+                    fov: 50,
+                    position: [0, 2, -20],
                 }}
             >
                 <scene backgroundIntensity={0}>
@@ -22,10 +22,10 @@ export const GovernorModel = ({ ...props }: any) => {
                     <pointLight position={[124, 10, 10]} />
 
                     <OrbitControls
-                        // maxDistance={20}
-                        // minDistance={20}
-                        // enablePan={false}
-                        // enabled={props.orbit}
+                        maxDistance={21}
+                        minDistance={15}
+                        enablePan={false}
+                        enabled={props.orbit}
                     />
                     <Environment preset="warehouse" background blur={100} />
 
@@ -36,6 +36,7 @@ export const GovernorModel = ({ ...props }: any) => {
                         roughnessMap={props.roughnessMap}
                         isModelLoaded={props.isModelLoaded}
                         setModelLoaded={props.setModelLoaded}
+                        play={props.play}
                     />
                 </scene>
             </Canvas>

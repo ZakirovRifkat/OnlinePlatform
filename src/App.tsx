@@ -5,6 +5,7 @@ import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 
 import { Main } from "./page/Main";
+import { ConfigProvider } from "antd";
 
 function App() {
     const [isModelLoaded, setModelLoaded] = useState(false);

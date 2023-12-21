@@ -1,7 +1,7 @@
 import { Slider } from "@mui/material";
 import styled from "styled-components";
 import { ModelCard } from "./ModelCard";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const marks = [
     {

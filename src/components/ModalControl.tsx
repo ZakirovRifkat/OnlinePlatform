@@ -1,4 +1,3 @@
-import React from "react";
 import styled from "styled-components";
 import { InfoControl } from "./InfoControl";
 import { ParamControl } from "./ParamControl";
@@ -26,6 +25,7 @@ const Container = styled.div`
     height: max-content;
     background-color: white;
     border-radius: 20px;
+    overflow: hidden;
     position: absolute;
     top: 50%;
     left: 5%;
