@@ -8,22 +8,22 @@ import { Wiki } from "./Wiki";
 
 export const Main = ({ ...props }: any) => {
     return (
-            <Container>
-                <AnimatePresence>
-            <Routes location={location} key={location.pathname}>
-                <Route path="/wiki/*" element={<Wiki />} />
-            </Routes>
+        <Container>
+            <AnimatePresence>
+                <Routes location={location} key={location.pathname}>
+                    <Route path="/wiki/*" element={<Wiki />} />
+                </Routes>
             </AnimatePresence>
-                    <Preloader isModelLoaded={props.isModelLoaded} />
-                    <Content
-                        colorMap={props.colorMap}
-                        displacementMap={props.displacementMap}
-                        normalMap={props.normalMap}
-                        roughnessMap={props.roughnessMap}
-                        isModelLoaded={props.isModelLoaded}
-                        setModelLoaded={props.setModelLoaded}
-                    />
-            </Container>
+            <Preloader isModelLoaded={props.isModelLoaded} />
+            <Content
+                colorMap={props.colorMap}
+                displacementMap={props.displacementMap}
+                normalMap={props.normalMap}
+                roughnessMap={props.roughnessMap}
+                isModelLoaded={props.isModelLoaded}
+                setModelLoaded={props.setModelLoaded}
+            />
+        </Container>
     );
 };
 

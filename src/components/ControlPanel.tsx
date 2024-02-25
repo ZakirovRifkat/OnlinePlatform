@@ -30,7 +30,7 @@ export const ControlPanel = ({ ...props }: any) => {
             <Tooltip title={"Теория"} placement="left">
                 <ContainerIcon
                     onClick={() => {
-                        navigate("/wiki");
+                        navigate("/main/wiki");
                     }}
                 >
                     <InfoOutlined style={style} />

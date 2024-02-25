@@ -1,10 +1,51 @@
 import { styled } from "styled-components";
+import { useLocation, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
 export const Wiki = () => {
+    const navigate = useNavigate();
+
+    const pageVariants = {
+        initial: {
+            opacity: 0,
+            scale: 0,
+        },
+        enter: {
+            opacity: 1,
+            scale: 1,
+            transition: {
+                duration: 0.5,
+                ease: "easeInOut",
+            },
+        },
+        exit: {
+            opacity: 0,
+            scale: 0,
+            transition: {
+                duration: 0.2,
+                ease: "easeInOut",
+            },
+        },
+    };
     return (
-        <Container>
-            <ContentContainer>
+        <Container
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => {
+                navigate("/main");
+            }}
+        >
+            <ContentContainer
+                initial="initial"
+                animate="enter"
+                exit="exit"
+                variants={pageVariants}
+                onClick={(e) => {
+                    e.stopPropagation();
+                }}
+            >
                 dsdss
             </ContentContainer>
         </Container>
