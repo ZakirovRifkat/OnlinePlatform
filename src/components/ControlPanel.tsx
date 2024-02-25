@@ -8,8 +8,10 @@ import {
     PauseCircleOutlined,
 } from "@ant-design/icons";
 import { Tooltip, message } from "antd";
+import { Navigate, useNavigate } from "react-router-dom";
 
 export const ControlPanel = ({ ...props }: any) => {
+    const navigate = useNavigate();
     const style = {
         fontSize: "30px",
         color: "white",
@@ -28,9 +30,7 @@ export const ControlPanel = ({ ...props }: any) => {
             <Tooltip title={"Теория"} placement="left">
                 <ContainerIcon
                     onClick={() => {
-                        props.setControl(
-                            props.controlValue === "info" ? null : "info"
-                        );
+                        navigate("/wiki");
                     }}
                 >
                     <InfoOutlined style={style} />

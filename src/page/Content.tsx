@@ -90,7 +90,7 @@ export const Content = ({ ...props }: any) => {
     const dt = tSpan[1] - tSpan[0];
     useEffect(() => {
         // Решение системы дифференциальных уравнений методом Рунге-Кутты
-        let solution = [initialConditions];
+        const solution = [initialConditions];
         for (let i = 1; i < tSpan.length; i++) {
             solution.push(
                 rungeKutta(
@@ -112,6 +112,7 @@ export const Content = ({ ...props }: any) => {
         }
         setSolution(solution);
     }, [mParams, f0Params, aParams, initialConditions]);
+
     return (
         <AnimatePresence>
             <Container
@@ -135,7 +136,6 @@ export const Content = ({ ...props }: any) => {
                 <TitleMainBanner animate={props.isModelLoaded}>
                     Интерактивная онлайн–лаборатория
                 </TitleMainBanner>
-
                 <ControlPanel
                     controlValue={controlValue}
                     setControl={setControl}
@@ -144,28 +144,22 @@ export const Content = ({ ...props }: any) => {
                     setPlay={setIsPlay}
                     play={isPlay}
                 />
-                <ConfigProvider
-                    theme={{
-                        token: {
-                            fontFamily: `"Cormorant Garamond", serif`,
-                        },
-                    }}
-                >
-                    <ModalControl
-                        controlValue={controlValue}
-                        tData={tSpan}
-                        solution={solution}
-                        setPlay={setIsPlay}
-                        setAParams={setAParams}
-                        setF0Params={setF0Params}
-                        setMParams={setMParams}
-                        aParams={aParams}
-                        f0Params={f0Params}
-                        mParams={mParams}
-                        initialConditions={initialConditions}
-                        setInitialConditins={setInitialConditins}
-                    />
-                </ConfigProvider>
+
+                <ModalControl
+                    controlValue={controlValue}
+                    tData={tSpan}
+                    solution={solution}
+                    setPlay={setIsPlay}
+                    setAParams={setAParams}
+                    setF0Params={setF0Params}
+                    setMParams={setMParams}
+                    aParams={aParams}
+                    f0Params={f0Params}
+                    mParams={mParams}
+                    initialConditions={initialConditions}
+                    setInitialConditins={setInitialConditins}
+                />
+
                 <Footer>
                     <span>
                         СПБГУ. Математико-механический факультет. Кафедра
@@ -186,34 +180,31 @@ const Container = styled(motion.div)`
 const TitleMainBanner = styled.p<{ animate: boolean }>`
     width: max-content;
     height: max-content;
-    font-size: 70px;
     z-index: 2;
     user-select: none;
     position: absolute;
-    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     transition: all 1s;
-
+    opacity: 0;
     color: #52380a;
     text-transform: uppercase;
     font-weight: 700;
     font-family: var(--font);
-
+    top: 60px;
+    font-size: 45px;
     animation-name: ${(props) => (props.animate ? "anime" : "")};
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
-    animation-delay: 1.5s;
+    animation-delay: 1s;
 
     @keyframes anime {
         from {
-            top: 50%;
-            font-size: 70px;
+            opacity: 0;
         }
         to {
-            top: 60px;
-            font-size: 45px;
+            opacity: 1;
         }
     }
 `;
@@ -229,7 +220,7 @@ const Icon = styled.img<{ animate: boolean }>`
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
-    animation-delay: 2s;
+    animation-delay: 1s;
 
     @keyframes animeIcon {
         from {

@@ -3,14 +3,14 @@ import { useState } from "react";
 import "./App.css";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { Main } from "./page/Main";
-import { ConfigProvider } from "antd";
+import { Wiki } from "./page/Wiki";
 
 function App() {
     const [isModelLoaded, setModelLoaded] = useState(false);
     const name = (type: any) => `/Rubber/Rubber004_1K-JPG_${type}.jpg`;
-    console.log("ну ?", isModelLoaded);
 
     const [colorMap, displacementMap, normalMap, roughnessMap] = useLoader(
         TextureLoader,
@@ -24,14 +24,24 @@ function App() {
 
     return (
         <AppContainer>
-            <Main
-                colorMap={colorMap}
-                displacementMap={displacementMap}
-                normalMap={normalMap}
-                roughnessMap={roughnessMap}
-                isModelLoaded={isModelLoaded}
-                setModelLoaded={setModelLoaded}
-            />
+            <BrowserRouter>
+                <Routes>
+                    <Route
+                        path="/"
+                        element={
+                            <Main
+                                colorMap={colorMap}
+                                displacementMap={displacementMap}
+                                normalMap={normalMap}
+                                roughnessMap={roughnessMap}
+                                isModelLoaded={isModelLoaded}
+                                setModelLoaded={setModelLoaded}
+                            />
+                        }
+                    />
+                    <Route path="/wiki" element={<Wiki />} />
+                </Routes>
+            </BrowserRouter>
         </AppContainer>
     );
 }
