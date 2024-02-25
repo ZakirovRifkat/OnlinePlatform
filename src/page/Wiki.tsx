@@ -1,26 +1,48 @@
 import { styled } from "styled-components";
+import { motion } from "framer-motion";
+
 export const Wiki = () => {
     return (
         <Container>
-            <Icon alt={"logo"} src={"/logo.svg"} />
-            <TitleMainBanner>Интерактивная онлайн–лаборатория</TitleMainBanner>
-            <Footer>
-                <span>
-                    СПБГУ. Математико-механический факультет. Кафедра прикладной
-                    кибернетики.
-                </span>
-                <span>Закиров Р.Э</span>
-            </Footer>
+            <ContentContainer>
+                dsdss
+            </ContentContainer>
         </Container>
     );
 };
 
-const Container = styled.div`
-    background-image: url("/background.png");
-    background-position: center;
-    background-repeat: no-repeat;
-    width: 100%;
-    min-height: 100vh;
+const Container = styled(motion.div)`
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    background-color: #0000009e;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 10;
+    overflow-x: scroll;
+    padding: 2vw 0;
+    @media (max-width: 620px) {
+        padding: 0px;
+    }
+`;
+
+const ContentContainer = styled(motion.div)`
+    background-color: #383838;
+    border-radius: 20px;
+    margin: auto auto;
+    padding: 45px 55px;
+
+    @media (max-width: 620px) {
+        padding: 6vw 6vw;
+        width: 100%;
+        min-height: 100vh;
+        height: max-content;
+        border-radius: 0px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 `;
 
 const TitleMainBanner = styled.p`
