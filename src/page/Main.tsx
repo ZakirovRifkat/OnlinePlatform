@@ -14,7 +14,7 @@ export const Main = ({ ...props }: any) => {
                     <Route path="/wiki/*" element={<Wiki />} />
                 </Routes>
             </AnimatePresence>
-            <Preloader isModelLoaded={props.isModelLoaded} />
+            {/* <Preloader isModelLoaded={props.isModelLoaded} /> */}
             <Content
                 colorMap={props.colorMap}
                 displacementMap={props.displacementMap}
