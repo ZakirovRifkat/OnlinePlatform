@@ -26,6 +26,7 @@ export const ModalControl = ({ ...props }: any) => {
                     <GraphicControl
                         tData={props.tData}
                         solution={props.solution}
+                        play = {props.play}
                     />
                 ) : null}
             </Container>

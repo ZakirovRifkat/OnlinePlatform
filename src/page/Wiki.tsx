@@ -17,6 +17,13 @@ const data = [
     {
         title: `Лекции по курсу "Теория управления" I.`,
         author: "Леонов Г.А.",
+        link: "https://math.spbu.ru/user/leonov/publications/control_theory/control_theory.pdf",
+    },
+    {
+        title: `Задача Андронова-Вышнеградского о регуляторе Уатта и      гипотеза Калмана о глобальной устойчивости 
+        Кузнецов`,
+        author: "Н.В, Акимова Е.Д, Андриевский Б.Р, Мокаев Р.Н",
+        link: "https://www.sciencedirect.com/science/article/pii/S2405896323013162",
     },
 ];
 const TextMd = ({ ...props }) => {
@@ -298,19 +305,20 @@ export const Wiki = () => {
                     </p>
                     <p>
                         <Typography.Title level={4}>
-                            <b>Строение</b>{" "}
-                            <Typography.Text
-                                type="secondary"
-                                onClick={handleSelectImg}
-                                style={{
-                                    cursor: "pointer",
-                                }}
-                            >
-                                см. рис 2
-                            </Typography.Text>
+                            <b>Строение</b>
                         </Typography.Title>
-                        Регулятор Уатта, который приводится во вращение от вала
-                        машины через шкив
+                        Регулятор Уатта{" "}
+                        <Typography.Text
+                            type="secondary"
+                            onClick={handleSelectImg}
+                            style={{
+                                cursor: "pointer",
+                            }}
+                        >
+                            (см. рис 2)
+                        </Typography.Text>
+                        , который приводится во вращение от вала машины через
+                        шкив
                         <sup
                             style={{
                                 fontSize: "small",
@@ -443,7 +451,7 @@ export const Wiki = () => {
                                     <div>— </div>
                                     <List.Item.Meta
                                         title={
-                                            <a href="https://math.spbu.ru/user/leonov/publications/control_theory/control_theory.pdf">
+                                            <a href={item.link} target="_blank">
                                                 {item.title}
                                             </a>
                                         }

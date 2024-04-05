@@ -64,7 +64,7 @@ const rungeKutta = (
 
 export const Content = ({ ...props }: any) => {
     const [isPlay, setIsPlay] = useState(false);
-    const [controlValue, setControl] = useState<null | string>(null);
+    const [controlValue, setControl] = useState<null | string>("params");
     const [isOrbit, setOrbit] = useState(false);
     const [solution, setSolution] = useState<any>();
 
@@ -158,6 +158,7 @@ export const Content = ({ ...props }: any) => {
                     mParams={mParams}
                     initialConditions={initialConditions}
                     setInitialConditins={setInitialConditins}
+                    play={isPlay}
                 />
 
                 <Footer>

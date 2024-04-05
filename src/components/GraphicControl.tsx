@@ -10,7 +10,11 @@ export const GraphicControl = ({ ...props }: any) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <ModelCard tData={props.tData} solution={props.solution} />
+            <ModelCard
+                tData={props.tData}
+                solution={props.solution}
+                play={props.play}
+            />
         </Container>
     );
 };
