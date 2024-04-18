@@ -1,6 +1,5 @@
 import Plot from "react-plotly.js"
 import { useEffect, useState } from "react"
-import { styled } from "styled-components"
 import numeric from "numeric"
 
 function sign(x: number): number {
@@ -14,9 +13,13 @@ function sign(x: number): number {
 }
 
 export const ArticleModel = () => {
+    // @ts-ignore
   const [A, setA] = useState(() => Number(localStorage.getItem("A")) || 1.5)
+  // @ts-ignore
   const [B, setB] = useState(() => Number(localStorage.getItem("B")) || 1)
+  // @ts-ignore
   const [C, setC] = useState(() => Number(localStorage.getItem("C")) || 0)
+  // @ts-ignore
   const [delta, setDelta] = useState(
     () => Number(localStorage.getItem("delta")) || 0.5
   )
@@ -29,6 +32,7 @@ export const ArticleModel = () => {
     console.log(delta)
 
     function diff_eq_system(
+        // @ts-ignore
       t: number,
       state: number[],
       approx = false

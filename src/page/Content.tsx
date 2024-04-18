@@ -5,10 +5,11 @@ import { AnimatePresence, motion } from "framer-motion";
 import logo from "./assets/logo.svg";
 import { ControlPanel } from "../components/ControlPanel";
 import { ModalControl } from "../components/ModalControl";
-import { ConfigProvider } from "antd";
+
 // Функция, представляющая систему дифференциальных уравнений регулятора Уатта
 const wattGovernor = (
     variables: any,
+    // @ts-ignore
     t: any,
     a: any,
     b: any,

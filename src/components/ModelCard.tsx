@@ -1,4 +1,3 @@
-import { Button } from "antd"
 import { useEffect, useState } from "react"
 import Plot from "react-plotly.js"
 
@@ -11,6 +10,7 @@ const layout = {
 export const ModelCard = ({ ...props }: any) => {
   const [data, setData] = useState<any>(0)
   const [intervalId, setIntervalId] = useState<any>()
+  // @ts-ignore
   const [yData, setYData] = useState(() =>
     props.solution?.map((row: any) => row[0])
   )

@@ -1,11 +1,11 @@
 import { motion } from "framer-motion"
 import styled from "styled-components"
 import { ModelCard } from "./ModelCard"
-import { local } from "d3"
 import { useState } from "react"
 import { ArticleModel } from "./ArticleModel"
 
 export const GraphicControl = ({ ...props }: any) => {
+    // @ts-ignore
   const [type, setType] = useState(() => localStorage.getItem("type") == "true")
   return (
     <Container

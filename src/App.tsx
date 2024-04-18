@@ -6,7 +6,6 @@ import { TextureLoader } from "three";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 
 import { Main } from "./page/Main";
-import { Wiki } from "./page/Wiki";
 
 function App() {
     const [isModelLoaded, setModelLoaded] = useState(false);

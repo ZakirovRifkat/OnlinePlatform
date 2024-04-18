@@ -227,26 +227,3 @@ const InputText = styled.div`
     width: 230px;
   }
 `
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 20px;
-`
-const Button = styled.button<{ $color: string }>`
-  padding: 8px 40px;
-  background-color: ${(props) => props.$color};
-  color: #fff;
-  border: none;
-  border-radius: 10px;
-  font-size: 20px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: 144.523%; /* 28.905px */
-  letter-spacing: 0.4px;
-  transition: opacity 0.2s;
-  cursor: pointer;
-  &:hover {
-    opacity: 60%;
-  }
-`

@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Preloader } from "./Preloader";
 import { Content } from "./Content";
