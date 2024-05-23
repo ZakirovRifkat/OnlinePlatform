@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import { TextureLoader } from "three";
 import Spindle from "./Spindle";
@@ -31,27 +31,24 @@ export const Governor = ({ ...props }: any) => {
         Metalname("Metalness"),
     ]);
 
-    let dAngleUp = 0.2;
-    let dAngleDown = 0.301;
-    let angleUp = 22.5;
-    let angleDown = 27.7;
-    let sleeve = -3.3;
-    let sleeveSpeed = 0.02465;
-    let speedAngle = 3;
-    let speed = -0.01;
+    const [yData, setYData] = useState(() =>
+        props.solution?.map((row: any) => row[0])
+    );
+    const [minSpeed, setMinSpeed] = useState(Math.min(...yData));
+    const [maxSpeed, setMaxSpeed] = useState(Math.max(...yData));
 
+    let speed = minSpeed;
     useEffect(() => {
-        if (props.isModelLoaded && props.play) {
+        if (props.play) {
             let index = 0;
 
             const updateRotation = () => {
                 if (index < props.solution.length) {
                     const el = props.solution[index];
-                    console.log(el[0]);
                     speed = el[0] / 100;
 
                     index++;
-                    setTimeout(updateRotation, 10); // Рекурсивный вызов с задержкой
+                    setTimeout(updateRotation, 1); // Рекурсивный вызов с задержкой
                 }
             };
 
@@ -59,27 +56,35 @@ export const Governor = ({ ...props }: any) => {
         }
     }, [props.play]);
 
+    useEffect(() => {
+        setYData(() => props.solution?.map((row: any) => row[0]));
+    }, [props.solution]);
+
+    useEffect(() => {
+        setMinSpeed(Math.min(...yData));
+        setMaxSpeed(Math.max(...yData));
+    }, [yData]);
+
     useFrame(() => {
         if (props.isModelLoaded && props.play) {
-            angleUp += dAngleUp;
-            angleDown += dAngleDown;
-            sleeve += sleeveSpeed;
-            speedAngle -= speed;
-            if (angleUp >= 46.8 || angleUp <= 22.5) {
-                dAngleUp = -1 * dAngleUp;
-            }
-            if (angleDown >= 64.2 || angleDown <= 27.7) {
-                dAngleDown = -1 * dAngleDown;
-            }
-            if (sleeve >= -0.3 || sleeve <= -3.3) {
-                sleeveSpeed = -1 * sleeveSpeed;
-                speed = -1 * speed;
-            }
-            groupRef.current.rotation.y += speed;
+            let speedSleeve =
+                (3 * (speed * 100 - minSpeed)) / (maxSpeed - minSpeed) - 3.3;
+            let angleUp =
+                ((speed * 100 - minSpeed) * 26.06) / (maxSpeed - minSpeed) +
+                22.5;
+
+            const angleDown =
+                ((speed * 100 - minSpeed) * (64.2 - 27.7)) /
+                    (maxSpeed - minSpeed) +
+                27.7;
+
+            groupRef.current.rotation.y += speed / 2;
+
             leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
             leftHandleDown.current.rotation.x =
                 THREE.MathUtils.degToRad(angleDown);
-            sleeveRef.current.position.y = sleeve;
+
+            sleeveRef.current.position.y = speedSleeve;
 
             rightHandleUp.current.rotation.z =
                 THREE.MathUtils.degToRad(angleUp);
