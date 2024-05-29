@@ -91,8 +91,10 @@ export const Governor = ({ ...props }: any) => {
     }, [props.type]);
 
     useEffect(() => {
-        setMinSpeed(Math.min(...yData));
-        setMaxSpeed(Math.max(...yData));
+        if (yData.lenght > 0) {
+            setMinSpeed(Math.min(...yData));
+            setMaxSpeed(Math.max(...yData));
+        }
     }, [yData]);
 
     useFrame(() => {
