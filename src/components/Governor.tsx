@@ -91,7 +91,7 @@ export const Governor = ({ ...props }: any) => {
     }, [props.type]);
 
     useEffect(() => {
-        if (yData.length > 0) {
+        if (yData && yData?.length > 0) {
             setMinSpeed(Math.min(...yData));
             setMaxSpeed(Math.max(...yData));
         }
