@@ -21,6 +21,7 @@ export const ParamControl = ({ ...props }: any) => {
 
     useEffect(() => {
         localStorage.setItem("type", String(articleSystem));
+        props.setType(articleSystem);
     }, [articleSystem]);
     return (
         <Container

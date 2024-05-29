@@ -31,34 +31,64 @@ export const Governor = ({ ...props }: any) => {
         Metalname("Metalness"),
     ]);
 
-    const [yData, setYData] = useState(() =>
-        props.solution?.map((row: any) => row[0])
-    );
-    const [minSpeed, setMinSpeed] = useState(Math.min(...yData));
-    const [maxSpeed, setMaxSpeed] = useState(Math.max(...yData));
+    const [yData, setYData] = useState<any>([]);
+    const [minSpeed, setMinSpeed] = useState(0);
+    const [maxSpeed, setMaxSpeed] = useState(0);
 
-    let speed = minSpeed;
+    const [rotor, setRotor] = useState<any[] | undefined>([]);
+    let speed = 0;
+    let rotorSpeed = 0;
+    let id = 0;
     useEffect(() => {
         if (props.play) {
             let index = 0;
 
             const updateRotation = () => {
-                if (index < props.solution.length) {
-                    const el = props.solution[index];
-                    speed = el[0] / 100;
+                if (index < yData.length) {
+                    // const el = props.solution[index];
+                    if (!props.type) {
+                        speed = yData[index] / 100;
+                    } else {
+                        speed = yData[index] * 10;
+                        let minimum = Math.min(...(rotor as number[]));
+                        rotorSpeed = rotor![index] + Math.abs(minimum) * 1.1;
+                    }
 
                     index++;
-                    setTimeout(updateRotation, 1); // Рекурсивный вызов с задержкой
+                    if (props.type === false) {
+                        clearTimeout(id);
+                        id = setTimeout(updateRotation, 10);
+                    } else if (props.type === true) {
+                        clearTimeout(id);
+                        id = setTimeout(updateRotation, 20); // Рекурсивный вызов с задержкой
+                    }
+                } else if (props.play === false) {
+                    return;
                 }
             };
 
             updateRotation(); // Запускаем первый вызов
+        } else {
+            clearTimeout(id);
         }
-    }, [props.play]);
+    }, [props.play, props.type]);
 
     useEffect(() => {
-        setYData(() => props.solution?.map((row: any) => row[0]));
-    }, [props.solution]);
+        if (!props.type) {
+            setYData(() => props.solution?.map((row: any) => row[0]));
+        } else {
+            setYData(() =>
+                localStorage.getItem("zValues")?.split(",").map(Number)
+            );
+            setRotor(() =>
+                localStorage.getItem("yValues")?.split(",").map(Number)
+            );
+        }
+    }, [props.solution, props.type]);
+
+    useEffect(() => {
+        console.log(props.type);
+    }, [props.type]);
 
     useEffect(() => {
         setMinSpeed(Math.min(...yData));
@@ -67,18 +97,42 @@ export const Governor = ({ ...props }: any) => {
 
     useFrame(() => {
         if (props.isModelLoaded && props.play) {
-            let speedSleeve =
-                (3 * (speed * 100 - minSpeed)) / (maxSpeed - minSpeed) - 3.3;
-            let angleUp =
-                ((speed * 100 - minSpeed) * 26.06) / (maxSpeed - minSpeed) +
-                22.5;
+            let speedSleeve;
+            let angleUp;
+            let angleDown;
+            if (!props.type) {
+                speedSleeve =
+                    (3 * (speed * 100 - minSpeed)) / (maxSpeed - minSpeed) -
+                    3.3;
+                angleUp =
+                    ((speed * 100 - minSpeed) * 26.06) / (maxSpeed - minSpeed) +
+                    22.5;
 
-            const angleDown =
-                ((speed * 100 - minSpeed) * (64.2 - 27.7)) /
-                    (maxSpeed - minSpeed) +
-                27.7;
+                angleDown =
+                    ((speed * 100 - minSpeed) * (64.2 - 27.7)) /
+                        (maxSpeed - minSpeed) +
+                    27.7;
+            } else {
+                speedSleeve =
+                    (3 * (speed - minSpeed * 10)) /
+                        (maxSpeed * 10 - minSpeed * 10) -
+                    3.3;
+                angleUp =
+                    ((speed - minSpeed * 10) * 26.06) /
+                        (maxSpeed * 10 - minSpeed * 10) +
+                    22.5;
 
-            groupRef.current.rotation.y += speed / 2;
+                angleDown =
+                    ((speed - minSpeed * 10) * (64.2 - 27.7)) /
+                        (maxSpeed * 10 - minSpeed * 10) +
+                    27.7;
+            }
+
+            if (!props.type) {
+                groupRef.current.rotation.y += speed / 1;
+            } else {
+                groupRef.current.rotation.y += rotorSpeed / 2;
+            }
 
             leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
             leftHandleDown.current.rotation.x =

@@ -29,3 +29,10 @@ body {
     box-sizing: border-box;
     text-decoration: none;
 }
+.ant-tabs-nav-list {
+    width: 100%;
+}
+.ant-tabs-tab {
+    width: 50%;
+    justify-content: center;
+}

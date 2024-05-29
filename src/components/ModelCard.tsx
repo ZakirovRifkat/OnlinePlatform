@@ -4,7 +4,7 @@ import Plot from "react-plotly.js";
 const layout = {
     title: "Физическая интерпретация",
     xaxis: { title: "Время" },
-    yaxis: { title: "Угол/Скорость" },
+    yaxis: { title: "Уголовая корость" },
 };
 
 export const ModelCard = ({ ...props }: any) => {
@@ -17,7 +17,7 @@ export const ModelCard = ({ ...props }: any) => {
     const func = () => {
         const id = setInterval(() => {
             setData((prev: any) => prev + 1);
-        }, 1);
+        }, 10);
         setIntervalId(id);
     };
 
@@ -42,12 +42,13 @@ export const ModelCard = ({ ...props }: any) => {
                         type: "scatter",
                         mode: "lines",
                         name: "Угловая скорость",
+                        showlegend: false,
                     },
                     {
                         type: "scatter",
                         mode: "lines",
                         x: [data, data],
-                        y: [Math.min(...yData) - 1, Math.max(...yData) + 1], // Меняйте в зависимости от диапазона оси y на вашем графике
+                        y: [Math.min(...yData) * 1.1, Math.max(...yData) * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
                         showlegend: false,
                         textinfo: "none",
                         name: "Линия",
@@ -55,13 +56,6 @@ export const ModelCard = ({ ...props }: any) => {
                 ]}
                 layout={layout}
             />
-            {/* <Button
-                onClick={() => {
-                    console.log(props.solution?.map((row: any) => row[0]));
-                }}
-            >
-                click
-            </Button> */}
         </div>
     );
 };

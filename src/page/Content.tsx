@@ -68,6 +68,7 @@ export const Content = ({ ...props }: any) => {
     const [controlValue, setControl] = useState<null | string>("params");
     const [isOrbit, setOrbit] = useState(false);
     const [solution, setSolution] = useState<any>();
+    const [type, setType] = useState(false);
 
     // Начальные условия
     const [initialConditions, setInitialConditins] = useState([1.0, 0.0, 1.0]); // Угловая скорость, положение вентиля, угловое ускорение
@@ -132,6 +133,7 @@ export const Content = ({ ...props }: any) => {
                     orbit={isOrbit}
                     play={isPlay}
                     solution={solution}
+                    type={type}
                 />
                 <Icon animate={props.isModelLoaded} alt={"logo"} src={logo} />
                 <TitleMainBanner animate={props.isModelLoaded}>
@@ -160,6 +162,8 @@ export const Content = ({ ...props }: any) => {
                     initialConditions={initialConditions}
                     setInitialConditins={setInitialConditins}
                     play={isPlay}
+                    setType={setType}
+                    type={type}
                 />
 
                 <Footer>
