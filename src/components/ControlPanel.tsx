@@ -30,7 +30,6 @@ export const ControlPanel = ({ ...props }: any) => {
             <Tooltip title={"Теория"} placement="left">
                 <ContainerIcon
                     onClick={() => {
-                        props.play = false;
                         navigate("/main/wiki");
                     }}
                 >
@@ -40,7 +39,6 @@ export const ControlPanel = ({ ...props }: any) => {
             <Tooltip title={"Настройка системы"} placement="left">
                 <ContainerIcon
                     onClick={() => {
-                        props.play = false;
                         props.setControl(
                             props.controlValue === "params" ? null : "params"
                         );
@@ -52,7 +50,6 @@ export const ControlPanel = ({ ...props }: any) => {
             <Tooltip title={"График"} placement="left">
                 <ContainerIcon
                     onClick={() => {
-                        props.play = false;
                         props.setControl(
                             props.controlValue === "graphic" ? null : "graphic"
                         );

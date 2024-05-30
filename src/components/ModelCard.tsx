@@ -49,7 +49,10 @@ export const ModelCard = ({ ...props }: any) => {
                         type: "scatter",
                         mode: "lines",
                         x: [data, data],
-                        y: [Math.min(...yData) * 1.1, Math.max(...yData) * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
+                        y: [
+                            Math.min(...yData) * 1.1 + 0.01,
+                            Math.max(...yData) * 1.1,
+                        ], // Меняйте в зависимости от диапазона оси y на вашем графике
                         showlegend: false,
                         textinfo: "none",
                         name: "Линия",

@@ -41,7 +41,7 @@ export const ParamControl = ({ ...props }: any) => {
             {articleSystem && (
                 <DataInputContainer>
                     <InputText>
-                        <div>Коэффицент A</div>{" "}
+                        <div>Коэффициент A</div>{" "}
                         <Input
                             defaultValue={localStorage.getItem("A") || 1.5}
                             onChange={(e) => {
@@ -59,7 +59,7 @@ export const ParamControl = ({ ...props }: any) => {
                         />
                     </InputText>
                     <InputText>
-                        <div>Коэффицент C</div>
+                        <div>Коэффициент C</div>
                         <Input
                             defaultValue={localStorage.getItem("C") || 0}
                             onChange={(e) => {
@@ -93,7 +93,10 @@ export const ParamControl = ({ ...props }: any) => {
             {!articleSystem && (
                 <DataInputContainer>
                     <InputText>
-                        <div>Угловая скорость ώ</div>{" "}
+                        <div>
+                            Угловая <br />
+                            скорость ώ
+                        </div>
                         <Input
                             defaultValue={props.initialConditions[0]}
                             onChange={(e) => {
@@ -211,7 +214,8 @@ const Container = styled(motion.div)`
         min-width: 350px;
     }
     @media screen and (max-width: 600px) {
-        background: white;
+        max-height: 460px;
+        background: #ffffff;
         padding: 20px;
     }
 `;
@@ -241,6 +245,10 @@ const Input = styled.input`
 
     padding: 8px 16px;
     margin: 0 14px;
+
+    @media screen and (max-width: 600px) {
+        width: 135px;
+    }
 `;
 const InputText = styled.div`
     color: rgba(0, 0, 0, 0.8);
@@ -257,5 +265,11 @@ const InputText = styled.div`
 
     div {
         width: 230px;
+        br {
+            display: none;
+            @media screen and (max-width: 600px) {
+                display: block;
+            }
+        }
     }
 `;
