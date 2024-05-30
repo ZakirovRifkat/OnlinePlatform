@@ -27,8 +27,9 @@ export const ControlPanel = ({ ...props }: any) => {
     return (
         <Container>
             {contextHolder}
-            <Tooltip title={"Теория"} placement="left" id="info">
+            <Tooltip title={"Теория"} placement="left">
                 <ContainerIcon
+                    id="info"
                     onClick={() => {
                         navigate("/main/wiki");
                     }}
