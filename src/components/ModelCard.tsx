@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import Plot from "react-plotly.js";
+import { styled } from "styled-components";
 
 const layout = {
     title: "Физическая интерпретация",
@@ -28,7 +29,7 @@ export const ModelCard = ({ ...props }: any) => {
     }, [props.play]);
 
     return (
-        <div>
+        <Container>
             <Plot
                 style={{
                     maxWidth: "500px",
@@ -56,6 +57,10 @@ export const ModelCard = ({ ...props }: any) => {
                 ]}
                 layout={layout}
             />
-        </div>
+        </Container>
     );
 };
+
+const Container = styled.div`
+    width: 100%;
+`;

@@ -137,7 +137,8 @@ export const Content = ({ ...props }: any) => {
                 />
                 <Icon animate={props.isModelLoaded} alt={"logo"} src={logo} />
                 <TitleMainBanner animate={props.isModelLoaded}>
-                    Интерактивная онлайн–лаборатория
+                    Интерактивная <br />
+                    онлайн–лаборатория
                 </TitleMainBanner>
                 <ControlPanel
                     controlValue={controlValue}
@@ -147,7 +148,6 @@ export const Content = ({ ...props }: any) => {
                     setPlay={setIsPlay}
                     play={isPlay}
                 />
-
                 <ModalControl
                     controlValue={controlValue}
                     tData={tSpan}
@@ -205,12 +205,25 @@ const TitleMainBanner = styled.p<{ animate: boolean }>`
     animation-timing-function: linear;
     animation-delay: 1s;
 
+    @media screen and (max-width: 600px) {
+        font-size: 28px;
+        white-space: wrap;
+        width: 100%;
+        text-align: center;
+    }
+
     @keyframes anime {
         from {
             opacity: 0;
         }
         to {
             opacity: 1;
+        }
+    }
+    br {
+        display: none;
+        @media screen and (max-width: 600px) {
+            display: block;
         }
     }
 `;
@@ -227,6 +240,10 @@ const Icon = styled.img<{ animate: boolean }>`
     animation-fill-mode: forwards;
     animation-timing-function: linear;
     animation-delay: 1s;
+
+    @media screen and (max-width: 600px) {
+        display: none;
+    }
 
     @keyframes animeIcon {
         from {
@@ -248,4 +265,7 @@ const Footer = styled.div`
     font-family: var(--font);
     color: #00000073;
     font-size: 20px;
+    @media screen and (max-width: 600px) {
+        display: none;
+    }
 `;

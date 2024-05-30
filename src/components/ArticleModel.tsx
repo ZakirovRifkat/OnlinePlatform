@@ -1,6 +1,7 @@
 import Plot from "react-plotly.js";
 import { useEffect, useState } from "react";
 import { Button, Flex, Result, Spin, Tabs, TabsProps } from "antd";
+import { styled } from "styled-components";
 
 export const ArticleModel = ({ ...props }) => {
     // @ts-ignore
@@ -106,16 +107,7 @@ export const ArticleModel = ({ ...props }) => {
 
     if (loading) {
         return (
-            <div
-                style={{
-                    width: "500px",
-                    height: "450px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    background: "white",
-                }}
-            >
+            <Container>
                 {error && (
                     <Result
                         status="error"
@@ -133,7 +125,7 @@ export const ArticleModel = ({ ...props }) => {
                     ></Result>
                 )}
                 {!error && <Spin />}
-            </div>
+            </Container>
         );
     }
 
@@ -142,62 +134,67 @@ export const ArticleModel = ({ ...props }) => {
             key: "1",
             label: "Смещение ползунка",
             children: (
-                <Plot
-                    style={{
-                        maxWidth: "500px",
-                        maxHeight: "450px",
-                        width: "max-content",
-                    }}
-                    data={[
-                        data,
-                        {
-                            type: "scatter",
-                            mode: "lines",
-                            x: [currentTime, currentTime],
-                            y: [minZ! * 1.1, maxZ! * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
-                            showlegend: false,
-                            textinfo: "none",
-                            name: "Линия",
-                        },
-                    ]}
-                    layout={{
-                        orientation: 10,
-                        xaxis: { title: "Время" },
-                        yaxis: { title: "Смещение ползунка" },
-                        title: "Модель с сервомотором",
-                    }}
-                />
+                <div style={{ overflow: "auto" }}>
+                    <Plot
+                        style={{
+                            maxWidth: "500px",
+                            maxHeight: "450px",
+                            width: "max-content",
+                        }}
+                        data={[
+                            data,
+                            {
+                                type: "scatter",
+                                mode: "lines",
+                                x: [currentTime, currentTime],
+                                y: [minZ! * 1.1, maxZ! * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
+                                showlegend: false,
+                                textinfo: "none",
+                                name: "Линия",
+                            },
+                        ]}
+                        layout={{
+                            orientation: 10,
+                            xaxis: { title: "Время" },
+                            yaxis: { title: "Смещение ползунка" },
+                            title: "Модель с сервомотором",
+                        }}
+                    />
+                </div>
             ),
         },
         {
             key: "2",
             label: "Угловая скорость",
             children: (
-                <Plot
-                    style={{
-                        maxWidth: "500px",
-                        maxHeight: "450px",
-                        width: "max-content",
-                    }}
-                    data={[
-                        data2,
-                        {
-                            type: "scatter",
-                            mode: "lines",
-                            x: [currentTime, currentTime],
-                            y: [minY! * 1.1, maxY! * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
-                            showlegend: false,
-                            textinfo: "none",
-                            name: "Линия",
-                        },
-                    ]}
-                    layout={{
-                        orientation: 10,
-                        xaxis: { title: "Время" },
-                        yaxis: { title: "Изменение угловой скорости" },
-                        title: "Модель с сервомотором",
-                    }}
-                />
+                <div style={{ overflow: "auto" }}>
+                    <Plot
+                        style={{
+                            maxWidth: "500px",
+                            maxHeight: "450px",
+                            width: "max-content",
+                            overflowX: "auto",
+                        }}
+                        data={[
+                            data2,
+                            {
+                                type: "scatter",
+                                mode: "lines",
+                                x: [currentTime, currentTime],
+                                y: [minY! * 1.1, maxY! * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
+                                showlegend: false,
+                                textinfo: "none",
+                                name: "Линия",
+                            },
+                        ]}
+                        layout={{
+                            orientation: 10,
+                            xaxis: { title: "Время" },
+                            yaxis: { title: "Изменение угловой скорости" },
+                            title: "Модель с сервомотором",
+                        }}
+                    />
+                </div>
             ),
         },
     ];
@@ -207,7 +204,7 @@ export const ArticleModel = ({ ...props }) => {
                 <Flex
                     vertical
                     align="center"
-                    style={{ background: "white" }}
+                    style={{ background: "white", overflow: "hidden" }}
                     justify="center"
                 >
                     <Tabs
@@ -221,3 +218,17 @@ export const ArticleModel = ({ ...props }) => {
         </>
     );
 };
+
+const Container = styled.div`
+    width: 500px;
+    height: 450px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+
+    @media screen and (max-width: 600px) {
+        width: 350px;
+        height: 450px;
+    }
+`;

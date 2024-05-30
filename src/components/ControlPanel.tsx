@@ -111,6 +111,17 @@ const Container = styled.div`
     -webkit-box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.2);
     -moz-box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.2);
     box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.2);
+
+    @media screen and (max-width: 600px) {
+        top: 100%;
+        transform: translateY(-100%);
+        left: 0;
+        width: 100%;
+        justify-content: space-around;
+        flex-direction: row;
+        box-sizing: border-box;
+        border-radius: 10px 10px 0 0;
+    }
 `;
 const ContainerIcon = styled.div`
     display: flex;

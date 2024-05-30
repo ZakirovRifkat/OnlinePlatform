@@ -29,11 +29,8 @@ export const GraphicControl = ({ ...props }: any) => {
 };
 
 const Container = styled(motion.div)`
-    /* max-width: 500px;
-    max-height: 600px; */
     width: 100%;
     height: 100%;
-    /* background-color: #ffffff; */
     overflow-y: auto;
     &::-webkit-scrollbar {
         width: 3px;
@@ -41,5 +38,9 @@ const Container = styled(motion.div)`
     }
     &::-webkit-scrollbar-thumb {
         background-color: silver;
+    }
+
+    @media screen and (max-width: 600px) {
+        max-width: 350px;
     }
 `;

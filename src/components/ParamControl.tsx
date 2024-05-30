@@ -32,10 +32,10 @@ export const ParamControl = ({ ...props }: any) => {
         >
             <TabsContainer $active={articleSystem}>
                 <Tab onClick={() => setArticleSystem(false)}>
-                    Физическая интерпретация
+                    Классическая модель регулятора
                 </Tab>
                 <Tab onClick={() => setArticleSystem(true)}>
-                    Система с сервомотором
+                    Модель с сервомотором
                 </Tab>
             </TabsContainer>
             {articleSystem && (
@@ -104,9 +104,7 @@ export const ParamControl = ({ ...props }: any) => {
                                 ]);
                             }}
                         />
-                        <div style={{ textAlign: "end", width: "120px" }}>
-                            рад/с
-                        </div>
+                        <Emasure>рад/с</Emasure>
                     </InputText>
                     <InputText>
                         <div>Коэффициент трения</div>{" "}
@@ -118,9 +116,7 @@ export const ParamControl = ({ ...props }: any) => {
                                 props.setAParams(Number(e.target.value));
                             }}
                         />
-                        <div style={{ textAlign: "end", width: "120px" }}>
-                            Н/кг*мс^2
-                        </div>
+                        <Emasure>Н/кг*мс^2</Emasure>
                     </InputText>
                     <InputText>
                         <div>Внешняя сила</div>{" "}
@@ -130,9 +126,7 @@ export const ParamControl = ({ ...props }: any) => {
                                 props.setF0Params(Number(e.target.value));
                             }}
                         />
-                        <div style={{ textAlign: "end", width: "120px" }}>
-                            Н
-                        </div>
+                        <Emasure>Н</Emasure>
                     </InputText>
                     <InputText>
                         <div>Масса</div>{" "}
@@ -142,15 +136,22 @@ export const ParamControl = ({ ...props }: any) => {
                                 props.setMParams(Number(e.target.value));
                             }}
                         />
-                        <div style={{ textAlign: "end", width: "120px" }}>
-                            Кг
-                        </div>
+                        <Emasure>Кг</Emasure>
                     </InputText>
                 </DataInputContainer>
             )}
         </Container>
     );
 };
+
+const Emasure = styled.div`
+    text-align: end;
+    width: 120px;
+
+    @media screen and (max-width: 600px) {
+        display: none;
+    }
+`;
 
 const TabsContainer = styled.div<{ $active: boolean }>`
     width: 100%;
@@ -208,6 +209,10 @@ const Container = styled(motion.div)`
         max-height: 400px;
         max-width: 350px;
         min-width: 350px;
+    }
+    @media screen and (max-width: 600px) {
+        background: white;
+        padding: 20px;
     }
 `;
 
