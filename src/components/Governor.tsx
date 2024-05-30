@@ -71,7 +71,7 @@ export const Governor = ({ ...props }: any) => {
         } else {
             clearTimeout(id);
         }
-    }, [props.play, props.type]);
+    }, [props.play, props.type, yData]);
 
     useEffect(() => {
         if (!props.type) {
@@ -84,7 +84,7 @@ export const Governor = ({ ...props }: any) => {
                 localStorage.getItem("yValues")?.split(",").map(Number)
             );
         }
-    }, [props.solution, props.type]);
+    }, [props.solution, props.type, props.play]);
 
     useEffect(() => {
         console.log(props.type);
