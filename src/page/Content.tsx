@@ -180,7 +180,7 @@ export const Content = ({ ...props }: any) => {
 
 const Container = styled(motion.div)`
     width: 100%;
-    height: 100vh;
+    height: 100svh;
     position: relative;
 `;
 const TitleMainBanner = styled.p<{ animate: boolean }>`

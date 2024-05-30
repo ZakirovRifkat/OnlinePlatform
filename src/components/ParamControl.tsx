@@ -35,7 +35,7 @@ export const ParamControl = ({ ...props }: any) => {
                     Классическая модель регулятора
                 </Tab>
                 <Tab onClick={() => setArticleSystem(true)}>
-                    Модель с сервомотором
+                    Модель с<br /> сервомотором
                 </Tab>
             </TabsContainer>
             {articleSystem && (
