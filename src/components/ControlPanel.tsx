@@ -27,7 +27,7 @@ export const ControlPanel = ({ ...props }: any) => {
     return (
         <Container>
             {contextHolder}
-            <Tooltip title={"Теория"} placement="left">
+            <Tooltip title={"Теория"} placement="left" id="info">
                 <ContainerIcon
                     onClick={() => {
                         navigate("/main/wiki");
@@ -118,6 +118,11 @@ const Container = styled.div`
         flex-direction: row;
         box-sizing: border-box;
         border-radius: 10px 10px 0 0;
+    }
+    #info {
+        @media screen and (max-width: 600px) {
+            display: none;
+        }
     }
 `;
 const ContainerIcon = styled.div`
