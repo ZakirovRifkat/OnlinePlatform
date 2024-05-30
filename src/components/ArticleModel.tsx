@@ -17,7 +17,7 @@ export const ArticleModel = ({ ...props }) => {
     const [initial, setInitial] = useState(
         () =>
             localStorage.getItem("initial")?.split(";").map(Number) || [
-                0, 0, 0, 0,
+                0, 0, -0.65, 0,
             ]
     );
     const [data, setData] = useState<any>();
