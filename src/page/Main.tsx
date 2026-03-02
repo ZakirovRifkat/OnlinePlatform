@@ -2,10 +2,30 @@ import styled from "styled-components";
 import { Preloader } from "./Preloader";
 import { Content } from "./Content";
 import { AnimatePresence } from "framer-motion";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { Wiki } from "./Wiki";
+import { Texture } from "three";
+import { Dispatch, SetStateAction } from "react";
 
-export const Main = ({ ...props }: any) => {
+type MainProps = {
+    colorMap: Texture;
+    displacementMap: Texture;
+    normalMap: Texture;
+    roughnessMap: Texture;
+    isModelLoaded: boolean;
+    setModelLoaded: Dispatch<SetStateAction<boolean>>;
+};
+
+export const Main = ({
+    colorMap,
+    displacementMap,
+    normalMap,
+    roughnessMap,
+    isModelLoaded,
+    setModelLoaded,
+}: MainProps) => {
+    const location = useLocation();
+
     return (
         <Container>
             <AnimatePresence>
@@ -13,14 +33,14 @@ export const Main = ({ ...props }: any) => {
                     <Route path="/wiki/*" element={<Wiki />} />
                 </Routes>
             </AnimatePresence>
-            <Preloader isModelLoaded={props.isModelLoaded} />
+            <Preloader isModelLoaded={isModelLoaded} />
             <Content
-                colorMap={props.colorMap}
-                displacementMap={props.displacementMap}
-                normalMap={props.normalMap}
-                roughnessMap={props.roughnessMap}
-                isModelLoaded={props.isModelLoaded}
-                setModelLoaded={props.setModelLoaded}
+                colorMap={colorMap}
+                displacementMap={displacementMap}
+                normalMap={normalMap}
+                roughnessMap={roughnessMap}
+                isModelLoaded={isModelLoaded}
+                setModelLoaded={setModelLoaded}
             />
         </Container>
     );

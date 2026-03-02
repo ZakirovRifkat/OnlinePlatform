@@ -1,30 +1,29 @@
-import { styled } from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
 import Markdown from "react-markdown";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
 import "katex/dist/katex.min.css"; // `rehype-katex` does not import the CSS for you
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Flex, Image, List, Modal, Typography } from "antd";
-import "./style.css";
+import "../style.css";
 import { CaretRightOutlined } from "@ant-design/icons";
 import { CopyBlock, googlecode } from "react-code-blocks";
-
-const data = [
-    {
-        title: `Лекции по курсу "Теория управления" I.`,
-        author: "Леонов Г.А.",
-        link: "https://math.spbu.ru/user/leonov/publications/control_theory/control_theory.pdf",
-    },
-    {
-        title: `Задача Андронова-Вышнеградского о регуляторе Уатта и      гипотеза Калмана о глобальной устойчивости 
-        Кузнецов`,
-        author: "Н.В, Акимова Е.Д, Андриевский Б.Р, Мокаев Р.Н",
-        link: "https://www.sciencedirect.com/science/article/pii/S2405896323013162",
-    },
-];
-const TextMd = ({ ...props }) => {
+import {
+    CodeBlock,
+    Container,
+    ContentContainer,
+    ImgContainer,
+    ShortModal,
+} from "./styles";
+import type { TextMdProps } from "./types";
+import {
+    CODE_MARKDOWN,
+    LITERATURE_DATA,
+    SELECT_IMG_HIGHLIGHT_TIMEOUT,
+    SYSTEM_MARKDOWN,
+    WIKI_PAGE_VARIANTS,
+} from "./constants";
+const TextMd = ({ children }: TextMdProps) => {
     return (
         <Markdown
             remarkPlugins={[remarkMath]}
@@ -35,14 +34,13 @@ const TextMd = ({ ...props }) => {
                 },
             }}
         >
-            {props.children}
+            {children}
         </Markdown>
     );
 };
 export const Wiki = () => {
     const navigate = useNavigate();
-    // @ts-ignore
-    const [markdown, setMarkdown] = useState("");
+
     const [isCodeOpen, setIsCodeOpen] = useState(false);
     const [isLiteratureOpen, setIsLiteratureOpen] = useState(false);
     const [selectImg, setSelectImg] = useState(false);
@@ -58,39 +56,9 @@ export const Wiki = () => {
         setSelectImg(true);
         setTimeout(() => {
             setSelectImg(false);
-        }, 1000);
+        }, SELECT_IMG_HIGHLIGHT_TIMEOUT);
     };
-    const systemMarkdown =
-        "```math\n\\begin{gathered}\n\\\\\n y=\\frac{F_0}{J} \\Delta x, \\quad z=\\frac{F_0}{J}(\\Delta x)^{\\bullet}, \\quad a=\\frac{\\alpha}{m}, \\quad b=\\frac{\\gamma_0}{m}, \\\\\n \\varphi(\\omega)=\\frac{\\left(-F_0\\right)}{m J}\\left(\\beta m r \\omega^2-\\gamma_0 x_0\\right) . \\\\\n\\begin{cases}\n\\dot{\\omega}=y \\\\\n\\dot{y}=z \\\\\n\\dot{z}=-a z-b y-\\varphi(\\omega),\n\\end{cases}\\\\\nгде ~ \\gamma - жесткость ~пружины, m - масса ~ грузов,  \\varphi(\\omega) -затухающий ~коэффициент, \\\\\na - коэффициент~ силы ~трения, J - момент ~инерции, F_0 - внешние~ силы\n\\end{gathered}\n```\n";
-    
-    //@ts-ignore
-    const codeMarkdown =
-        "```\nconst wattGovernor = (\n    variables: [number, number, number], t: number, a: number, b: number,\n    F0: number, m: number, J: number, beta: number, r: number, gamma0: number, x0: number\n): number[] => {\n    const [omega, y, z] = variables;\n    const dydt: number[] = [y, z, -a * z -b * y - (F0 / (m * J)) * (beta * m * r * omega ** 2 - gamma0 * x0)];\n    return dydt;\n};\n```";
-    const pageVariants = {
-        initial: {
-            opacity: 0,
-            scale: 0,
-        },
-        enter: {
-            opacity: 1,
-            scale: 1,
-            transition: {
-                duration: 0.5,
-                ease: "easeInOut",
-            },
-        },
-        exit: {
-            opacity: 0,
-            scale: 0,
-            transition: {
-                duration: 0.2,
-                ease: "easeInOut",
-            },
-        },
-    };
-    useEffect(() => {
-        localStorage.setItem("markdown", markdown!);
-    }, [markdown]);
+
     return (
         <Container
             initial={{ opacity: 0 }}
@@ -105,7 +73,7 @@ export const Wiki = () => {
                 initial="initial"
                 animate="enter"
                 exit="exit"
-                variants={pageVariants}
+                variants={WIKI_PAGE_VARIANTS}
                 onClick={(e) => {
                     e.stopPropagation();
                 }}
@@ -392,7 +360,7 @@ export const Wiki = () => {
                     remarkPlugins={[remarkMath]}
                     rehypePlugins={[rehypeKatex]}
                 >
-                    {systemMarkdown}
+                    {SYSTEM_MARKDOWN}
                 </Markdown>
                 <Typography.Title
                     level={4}
@@ -415,12 +383,9 @@ export const Wiki = () => {
                 >
                     <CopyBlock
                         language={"ts"}
-                        text={
-                            "const wattGovernor = (\n    variables: [number, number, number], t: number, a: number, b: number,\n    F0: number, m: number, J: number, beta: number, r: number, gamma0: number, x0: number\n): number[] => {\n    const [omega, y, z] = variables;\n    const dydt: number[] = [y, z, -a * z -b * y - (F0 / (m * J)) * (beta * m * r * omega ** 2 - gamma0 * x0)];\n    return dydt;\n};\n"
-                        }
+                        text={CODE_MARKDOWN}
                         showLineNumbers={false}
                         theme={googlecode}
-                        // wrapLines={true}
                         codeBlock
                     />
                 </CodeBlock>
@@ -442,7 +407,7 @@ export const Wiki = () => {
                 <CodeBlock $open={isLiteratureOpen}>
                     <List
                         itemLayout="horizontal"
-                        dataSource={data}
+                        dataSource={LITERATURE_DATA}
                         renderItem={(item, index) => (
                             <List.Item
                                 key={index}
@@ -452,7 +417,11 @@ export const Wiki = () => {
                                     <div>— </div>
                                     <List.Item.Meta
                                         title={
-                                            <a href={item.link} target="_blank">
+                                            <a
+                                                href={item.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                            >
                                                 {item.title}
                                             </a>
                                         }
@@ -463,93 +432,7 @@ export const Wiki = () => {
                         )}
                     />
                 </CodeBlock>
-                {/* <Markdown
-                    remarkPlugins={[remarkMath]}
-                    rehypePlugins={[rehypeKatex]}
-                >
-                    {markdown}
-                </Markdown>
-                <TextArea
-                    placeholder="enter some text"
-                    onChange={(e) => setMarkdown(e.target.value)}
-                    defaultValue={markdown!}
-                    autoSize={{ minRows: 15 }}
-                /> */}
             </ContentContainer>
         </Container>
     );
 };
-
-const Container = styled(motion.div)`
-    position: fixed;
-    width: 100vw;
-    height: 100vh;
-    background-color: #0000009e;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10;
-    overflow-x: hidden;
-    padding: 2vw 0;
-    font-family: var(--font);
-    font-weight: 600;
-    @media (max-width: 620px) {
-        padding: 0px;
-    }
-`;
-
-const ContentContainer = styled(motion.div)`
-    background-color: white;
-    border-radius: 20px;
-    margin: auto auto;
-    padding: 30px 55px;
-    width: 80%;
-
-    @media (max-width: 620px) {
-        padding: 6vw 6vw;
-        width: 100%;
-        min-height: 100vh;
-        height: max-content;
-        border-radius: 0px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-`;
-const CodeBlock = styled.div<{ $open: boolean }>`
-    height: auto;
-    max-height: ${(props) => (props.$open ? "1000px" : 0)};
-    transition: max-height
-        ${(props) => (props.$open ? " 0.8s ease-in-out" : " 0.5s ease-out")};
-    overflow: hidden;
-    font-family: "JetBrains Mono", monospace;
-    font-weight: 400;
-`;
-
-const ImgContainer = styled.div<{ $back: boolean }>`
-    width: max-content;
-    height: max-content;
-    float: right;
-    position: relative;
-    padding: 10px;
-    border-radius: 20px;
-    transition: background-color 0.5s linear;
-    background-color: ${(props) => (props.$back ? "#39bdf122" : "transparent")};
-`;
-const ShortModal = styled.div<{ $top: string; $left: string }>`
-    width: max-content;
-    height: max-content;
-    padding: 5px 10px;
-    position: absolute;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: 0 0 10px 2px rgba(0, 0, 0, 0.4);
-    top: ${(props) => props.$top};
-    left: ${(props) => props.$left};
-    opacity: 0;
-    font-size: 14px;
-    transition: opacity 0.3s;
-    &:hover {
-        opacity: 1;
-    }
-`;
