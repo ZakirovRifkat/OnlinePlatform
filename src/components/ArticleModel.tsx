@@ -31,7 +31,7 @@ export const ArticleModel = ({ ...props }) => {
     // const [index, setIndex] = useState<number>(0);
 
     useEffect(() => {
-        let id = null;
+        let id: number | null = null;
         let index = 0;
         if (!loading && props.play) {
             id = setInterval(() => {
