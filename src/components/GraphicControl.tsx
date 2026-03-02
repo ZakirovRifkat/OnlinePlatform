@@ -5,10 +5,10 @@ import { useState } from "react";
 import { ArticleModel } from "./ArticleModel";
 
 export const GraphicControl = ({ ...props }: any) => {
-    // @ts-ignore
-    const [type, setType] = useState(
-        () => localStorage.getItem("type") == "true"
-    );
+    const [type, _setType] = useState(() => {
+        return localStorage.getItem("type") == "true";
+    });
+
     return (
         <Container
             initial={{ opacity: 0 }}

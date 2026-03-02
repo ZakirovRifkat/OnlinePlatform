@@ -2,24 +2,20 @@ import Plot from "react-plotly.js";
 import { useEffect, useState } from "react";
 import { Button, Flex, Result, Spin, Tabs, TabsProps } from "antd";
 import { styled } from "styled-components";
+import { fetchModelData } from "../api/modelApi";
 
 export const ArticleModel = ({ ...props }) => {
-    // @ts-ignore
     const [A, setA] = useState(() => Number(localStorage.getItem("A")) || 1.5);
-    // @ts-ignore
     const [B, setB] = useState(() => Number(localStorage.getItem("B")) || 1);
-    // @ts-ignore
     const [C, setC] = useState(() => Number(localStorage.getItem("C")) || 0);
-    // @ts-ignore
     const [delta, setDelta] = useState(
-        () => Number(localStorage.getItem("delta")) || 1.3
+        () => Number(localStorage.getItem("delta")) || 1.3,
     );
-    // @ts-ignore
     const [initial, setInitial] = useState(
         () =>
             localStorage.getItem("initial")?.split(";").map(Number) || [
                 0, 0, -0.65, 0,
-            ]
+            ],
     );
     const [data, setData] = useState<any>();
     const [data2, setData2] = useState<any>();
@@ -34,8 +30,8 @@ export const ArticleModel = ({ ...props }) => {
     const [error, setError] = useState<any>();
     // const [index, setIndex] = useState<number>(0);
 
-    let id = 0;
     useEffect(() => {
+        let id = null;
         let index = 0;
         if (!loading && props.play) {
             id = setInterval(() => {
@@ -44,22 +40,21 @@ export const ArticleModel = ({ ...props }) => {
             }, 30);
         }
         return () => {
-            clearInterval(id);
+            if (id) {
+                clearInterval(id);
+            }
         };
     }, [props.play]);
 
     const getParams = () => {
         setError(undefined);
-        const BASE_URL = "https://vs4j67qn-8000.euw.devtunnels.ms";
-
-        const url = `${BASE_URL}/model?A=${A}&B=${B}&C=${C}&delta=${delta}&initial=${initial.join(
-            "&initial="
-        )}`;
-
-        fetch(url, {
-            method: "GET",
+        fetchModelData({
+            A,
+            B,
+            C,
+            delta,
+            initial,
         })
-            .then((response) => response.json())
             .then((data) => {
                 // y[:, 2]
                 const xValues = data.y.map((row: any[]) => row[2]);
@@ -103,7 +98,7 @@ export const ArticleModel = ({ ...props }) => {
 
     useEffect(() => {
         getParams();
-    }, []);
+    }, [props.play]);
 
     if (loading) {
         return (

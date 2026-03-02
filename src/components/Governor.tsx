@@ -50,7 +50,7 @@ export const Governor = ({ ...props }: any) => {
                         speed = yData[index] / 100;
                     } else {
                         speed = yData[index] * 10;
-                        let minimum = Math.min(...(rotor as number[]));
+                        const minimum = Math.min(...(rotor as number[]));
                         rotorSpeed = rotor![index] + Math.abs(minimum) * 1.1;
                     }
 
@@ -77,11 +77,13 @@ export const Governor = ({ ...props }: any) => {
         if (!props.type) {
             setYData(() => props.solution?.map((row: any) => row[0]));
         } else {
-            setYData(() =>
-                localStorage.getItem("zValues")?.split(",").map(Number)
+            setYData(
+                () =>
+                    localStorage.getItem("zValues")?.split(",").map(Number) ??
+                    [],
             );
             setRotor(() =>
-                localStorage.getItem("yValues")?.split(",").map(Number)
+                localStorage.getItem("yValues")?.split(",").map(Number),
             );
         }
     }, [props.solution, props.type, props.play]);
@@ -145,7 +147,7 @@ export const Governor = ({ ...props }: any) => {
             rightHandleUp.current.rotation.z =
                 THREE.MathUtils.degToRad(angleUp);
             rightHandleDown.current.rotation.x = THREE.MathUtils.degToRad(
-                -1 * angleDown
+                -1 * angleDown,
             );
         }
         if (
