@@ -58,7 +58,6 @@ export const Governor = (props: GovernorProps) => {
     const sleeveKnucklePivotRef = useRef<THREE.Group | null>(null);
     const sleeveLiftBaseRef = useRef<number | null>(null);
 
-    const knuckleSmallCorrectionDeg = 4;
     const showPivotHelper = false;
 
     const engineShaftGeometry = useMemo(
@@ -606,11 +605,11 @@ export const Governor = (props: GovernorProps) => {
                     <mesh position={[0, 0, 0]}>
                         <boxGeometry args={[1.5, gateHeight, 0.95]} />
                         <meshStandardMaterial
-                            color={"#ff4d1f"}
-                            emissive={"#5a1400"}
-                            emissiveIntensity={0.6}
-                            metalness={0.25}
-                            roughness={0.15}
+                            displacementScale={0}
+                            color={"#b8bec8"}
+                            metalness={0.88}
+                            roughness={0.34}
+                            {...standMaterialMaps}
                         />
                     </mesh>
                 </group>
