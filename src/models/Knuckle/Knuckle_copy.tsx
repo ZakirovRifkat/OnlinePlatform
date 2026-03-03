@@ -15,10 +15,10 @@ type KnuckleGLTF = GLTF & {
 type KnuckleProps = MaterialMapsProps & {
     lengthFactor?: number;
     knuckleScale?: number;
-    pivotMode?: "end" | "center";
+    pivotMode?: "end" | "center" | "front" | "back";
 };
 
-export const Knuckle = ({
+export const KnuckleCopy = ({
     lengthFactor = 1,
     knuckleScale = 5,
     pivotMode = "end",
@@ -84,6 +84,35 @@ export const Knuckle = ({
             geometry.center();
             geometry.computeBoundingBox();
             geometry.computeBoundingSphere();
+        } else if (pivotMode === "front" || pivotMode === "back") {
+            geometry.computeBoundingBox();
+            if (geometry.boundingBox) {
+                const size = new THREE.Vector3();
+                geometry.boundingBox.getSize(size);
+
+                const pivotAxis =
+                    size.x >= size.y && size.x >= size.z
+                        ? "x"
+                        : size.y >= size.z
+                          ? "y"
+                          : "z";
+
+                const pivotPoint =
+                    pivotMode === "front"
+                        ? geometry.boundingBox.max[pivotAxis]
+                        : geometry.boundingBox.min[pivotAxis];
+
+                if (pivotAxis === "x") {
+                    geometry.translate(-pivotPoint, 0, 0);
+                } else if (pivotAxis === "y") {
+                    geometry.translate(0, -pivotPoint, 0);
+                } else {
+                    geometry.translate(0, 0, -pivotPoint);
+                }
+
+                geometry.computeBoundingBox();
+                geometry.computeBoundingSphere();
+            }
         }
 
         return geometry;
@@ -94,8 +123,8 @@ export const Knuckle = ({
             geometry={stretchedGeometry}
             material={model.nodes.Knuckle.material}
             scale={knuckleScale}
-            position={pivotMode === "center" ? [0, 0, 0] : [-4.2, -0.4, -0.3]}
-            rotation={[Math.PI / 2, 0, 0]}
+            position={[0, 0, 0]}
+            rotation={[0, 0, 0]}
         />
     );
 };

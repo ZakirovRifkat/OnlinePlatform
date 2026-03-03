@@ -15,7 +15,7 @@ export const GovernorModel = (props: GovernorModelProps) => {
             }}
             camera={{
                 fov: 50,
-                position: [0, 2, -20],
+                position: [0, 2, -25],
             }}
         >
             <scene backgroundIntensity={0}>
@@ -23,8 +23,8 @@ export const GovernorModel = (props: GovernorModelProps) => {
                 <pointLight position={[124, 10, 10]} />
 
                 <OrbitControls
-                    maxDistance={21}
-                    minDistance={15}
+                    maxDistance={30}
+                    minDistance={10}
                     enablePan={false}
                     enabled={props.orbit}
                 />
