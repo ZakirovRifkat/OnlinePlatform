@@ -1,0 +1,1 @@
+export { GovernorModel } from "./GovernorModel";

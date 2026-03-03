@@ -1,40 +1,59 @@
 import Plot from "react-plotly.js";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Button, Flex, Result, Spin, Tabs, TabsProps } from "antd";
-import { styled } from "styled-components";
-import { fetchModelData } from "../api/modelApi";
+import { fetchModelData } from "../../api/modelApi";
+import type { ArticleModelProps } from "./types";
+import { Container } from "./styles";
 
-export const ArticleModel = ({ ...props }) => {
-    const [A, setA] = useState(() => Number(localStorage.getItem("A")) || 1.5);
-    const [B, setB] = useState(() => Number(localStorage.getItem("B")) || 1);
-    const [C, setC] = useState(() => Number(localStorage.getItem("C")) || 0);
-    const [delta, setDelta] = useState(
+export const ArticleModel = (props: ArticleModelProps) => {
+    const [A] = useState(() => Number(localStorage.getItem("A")) || 1.5);
+    const [B] = useState(() => Number(localStorage.getItem("B")) || 1);
+    const [C] = useState(() => Number(localStorage.getItem("C")) || 0);
+    const [delta] = useState(
         () => Number(localStorage.getItem("delta")) || 1.3,
     );
-    const [initial, setInitial] = useState(
+    const [initial] = useState(
         () =>
             localStorage.getItem("initial")?.split(";").map(Number) || [
                 0, 0, -0.65, 0,
             ],
     );
-    const [data, setData] = useState<any>();
-    const [data2, setData2] = useState<any>();
+    const [data, setData] = useState<{
+        x: number[];
+        y: number[];
+        mode: string;
+        showlegend: boolean;
+        name: string;
+    }>();
+    const [data2, setData2] = useState<{
+        x: number[];
+        y: number[];
+        mode: string;
+        showlegend: boolean;
+        name: string;
+    }>();
     const [loading, setLoading] = useState(true);
-    const [timeData, setTimeData] = useState<any[]>([]);
-    const [currentTime, setCurrentTime] = useState<any>(0);
+    const [timeData, setTimeData] = useState<number[]>([]);
+    const [currentTime, setCurrentTime] = useState(0);
 
     const [minZ, setMinZ] = useState<number>();
     const [maxZ, setMaxZ] = useState<number>();
     const [minY, setMinY] = useState<number>();
     const [maxY, setMaxY] = useState<number>();
-    const [error, setError] = useState<any>();
+    const [error, setError] = useState<unknown>();
     // const [index, setIndex] = useState<number>(0);
 
     useEffect(() => {
         let id: number | null = null;
         let index = 0;
-        if (!loading && props.play) {
+        if (!loading && props.play && timeData.length > 0) {
             id = setInterval(() => {
+                if (index >= timeData.length) {
+                    if (id) {
+                        clearInterval(id);
+                    }
+                    return;
+                }
                 setCurrentTime(timeData[index]);
                 index++;
             }, 30);
@@ -44,9 +63,9 @@ export const ArticleModel = ({ ...props }) => {
                 clearInterval(id);
             }
         };
-    }, [props.play]);
+    }, [loading, props.play, timeData]);
 
-    const getParams = () => {
+    const getParams = useCallback(() => {
         setError(undefined);
         fetchModelData({
             A,
@@ -57,13 +76,13 @@ export const ArticleModel = ({ ...props }) => {
         })
             .then((data) => {
                 // y[:, 2]
-                const xValues = data.y.map((row: any[]) => row[2]);
+                const xValues = data.y.map((row: number[]) => row[2]);
 
                 // y[:, 0]
-                const yValues = data.y.map((row: any[]) => row[3]);
+                const yValues = data.y.map((row: number[]) => row[3]);
 
                 // y[:, 1]
-                const zValues = data.y.map((row: any[]) => row[1]);
+                const zValues = data.y.map((row: number[]) => row[1]);
 
                 localStorage.setItem("xValues", String(xValues));
                 localStorage.setItem("yValues", String(yValues));
@@ -94,16 +113,16 @@ export const ArticleModel = ({ ...props }) => {
                 setError(error);
                 // Обработка ошибки
             });
-    };
+    }, [A, B, C, delta, initial]);
 
     useEffect(() => {
         getParams();
-    }, [props.play]);
+    }, [getParams, props.play]);
 
     if (loading) {
         return (
             <Container>
-                {error && (
+                {Boolean(error) && (
                     <Result
                         status="error"
                         title="Ошибка запроса"
@@ -120,6 +139,21 @@ export const ArticleModel = ({ ...props }) => {
                     ></Result>
                 )}
                 {!error && <Spin />}
+            </Container>
+        );
+    }
+
+    if (
+        !data ||
+        !data2 ||
+        minZ === undefined ||
+        maxZ === undefined ||
+        minY === undefined ||
+        maxY === undefined
+    ) {
+        return (
+            <Container>
+                <Spin />
             </Container>
         );
     }
@@ -213,17 +247,3 @@ export const ArticleModel = ({ ...props }) => {
         </>
     );
 };
-
-const Container = styled.div`
-    width: 500px;
-    height: 450px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: white;
-
-    @media screen and (max-width: 600px) {
-        width: 350px;
-        height: 450px;
-    }
-`;

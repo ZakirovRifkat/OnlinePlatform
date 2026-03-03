@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Plot from "react-plotly.js";
-import { styled } from "styled-components";
+import type { ModelCardProps } from "./types";
+import { Container } from "./styles";
 
 const layout = {
     title: "Физическая интерпретация",
@@ -8,23 +9,25 @@ const layout = {
     yaxis: { title: "Уголовая корость" },
 };
 
-export const ModelCard = ({ ...props }: any) => {
-    const [data, setData] = useState<any>(0);
-    const [intervalId, setIntervalId] = useState<any>();
-    // @ts-ignore
-    const [yData, setYData] = useState(() =>
-        props.solution?.map((row: any) => row[0])
+export const ModelCard = (props: ModelCardProps) => {
+    const [data, setData] = useState(0);
+
+    const intervalIdRef = useRef<number | null>(null);
+
+    const [yData, setYData] = useState<number[]>(() =>
+        props.solution?.map((row) => row[0]),
     );
+
     const func = () => {
         const id = setInterval(() => {
-            setData((prev: any) => prev + 1);
+            setData((prev) => prev + 1);
         }, 10);
-        setIntervalId(id);
+        intervalIdRef.current = id;
     };
 
     useEffect(() => {
         setData(0);
-        intervalId ? clearInterval(intervalId) : null;
+        intervalIdRef.current ? clearInterval(intervalIdRef.current) : null;
         props.play ? func() : null;
     }, [props.play]);
 
@@ -39,7 +42,7 @@ export const ModelCard = ({ ...props }: any) => {
                 data={[
                     {
                         x: props.tSpan,
-                        y: props.solution?.map((row: any) => row[0]),
+                        y: props.solution?.map((row) => row[0]),
                         type: "scatter",
                         mode: "lines",
                         name: "Угловая скорость",
@@ -63,7 +66,3 @@ export const ModelCard = ({ ...props }: any) => {
         </Container>
     );
 };
-
-const Container = styled.div`
-    width: 100%;
-`;

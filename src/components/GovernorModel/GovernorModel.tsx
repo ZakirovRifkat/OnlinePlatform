@@ -1,8 +1,9 @@
 import { Canvas } from "@react-three/fiber";
 import { Environment, OrbitControls } from "@react-three/drei";
-import { Governor } from "./Governor";
+import { Governor } from "../Governor";
+import type { GovernorModelProps } from "./types";
 
-export const GovernorModel = ({ ...props }: any) => {
+export const GovernorModel = (props: GovernorModelProps) => {
     return (
         <Canvas
             style={{

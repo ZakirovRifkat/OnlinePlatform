@@ -1,10 +1,11 @@
-import styled from "styled-components";
-import { InfoControl } from "./InfoControl";
-import { ParamControl } from "./ParamControl";
-import { GraphicControl } from "./GraphicControl";
+import { InfoControl } from "../InfoControl";
+import { ParamControl } from "../ParamControl";
+import { GraphicControl } from "../GraphicControl";
 import { AnimatePresence } from "framer-motion";
+import type { ModalControlProps } from "./types";
+import { Container } from "./styles";
 
-export const ModalControl = ({ ...props }: any) => {
+export const ModalControl = (props: ModalControlProps) => {
     return (
         <AnimatePresence>
             <Container $shadow={props.controlValue === "params"}>
@@ -35,17 +36,3 @@ export const ModalControl = ({ ...props }: any) => {
         </AnimatePresence>
     );
 };
-
-const Container = styled.div<{ $shadow?: boolean }>`
-    width: max-content;
-    height: max-content;
-
-    box-shadow: ${(props) =>
-        props.$shadow ? "" : "0px 0px 8px 2px rgba(0, 0, 0, 0.2)"};
-    border-radius: 20px;
-    overflow: hidden;
-    position: absolute;
-    top: 50%;
-    left: 5%;
-    transform: translate(0%, -50%);
-`;

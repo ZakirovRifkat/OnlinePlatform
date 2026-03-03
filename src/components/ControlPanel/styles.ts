@@ -1,0 +1,62 @@
+import styled from "styled-components";
+
+export const Container = styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    padding: 20px 10px 20px 10px;
+    border-radius: 10px 0 0 10px;
+
+    gap: 16px;
+    width: max-content;
+    height: max-content;
+    transition: all 1s;
+    position: absolute;
+    top: 50%;
+    right: 0;
+    transform: translate(0%, -50%);
+    background-color: #ffffff;
+
+    -webkit-box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 8px 4px rgba(0, 0, 0, 0.2);
+
+    @media screen and (max-width: 600px) {
+        top: 100%;
+        transform: translateY(-100%);
+        left: 0;
+        width: 100%;
+        justify-content: space-around;
+        flex-direction: row;
+        box-sizing: border-box;
+        border-radius: 10px 10px 0 0;
+    }
+
+    #info {
+        @media screen and (max-width: 600px) {
+            display: none;
+        }
+    }
+`;
+
+export const ContainerIcon = styled.div`
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    background-color: #52380aa2;
+    -webkit-box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 0px 8px 3px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &:hover {
+        background-color: #52380ad8;
+        -webkit-box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2) inset;
+        -moz-box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2) inset;
+        box-shadow: 0px 0px 10px 2px rgba(0, 0, 0, 0.2) inset;
+    }
+`;

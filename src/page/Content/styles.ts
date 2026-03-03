@@ -7,7 +7,7 @@ export const Container = styled(motion.div)`
     position: relative;
 `;
 
-export const TitleMainBanner = styled.p<{ animate: boolean }>`
+export const TitleMainBanner = styled.p<{ $animate: boolean }>`
     width: max-content;
     height: max-content;
     z-index: 2;
@@ -23,7 +23,7 @@ export const TitleMainBanner = styled.p<{ animate: boolean }>`
     font-family: var(--font);
     top: 60px;
     font-size: 45px;
-    animation-name: ${(props) => (props.animate ? "anime" : "")};
+    animation-name: ${(props) => (props.$animate ? "anime" : "")};
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
@@ -52,7 +52,7 @@ export const TitleMainBanner = styled.p<{ animate: boolean }>`
     }
 `;
 
-export const Icon = styled.img<{ animate: boolean }>`
+export const Icon = styled.img<{ $animate: boolean }>`
     width: 100px;
     height: 100px;
     opacity: 0;
@@ -60,7 +60,7 @@ export const Icon = styled.img<{ animate: boolean }>`
     top: 60px;
     left: 6%;
     transform: translate(-50%, -50%);
-    animation-name: ${(props) => (props.animate ? "animeIcon" : "")};
+    animation-name: ${(props) => (props.$animate ? "animeIcon" : "")};
     animation-duration: 0.5s;
     animation-fill-mode: forwards;
     animation-timing-function: linear;
@@ -89,7 +89,7 @@ export const Footer = styled.div`
     bottom: 0.6em;
     left: 0;
     font-family: var(--font);
-    color: #00000073;
+    color: rgba(0, 0, 0, 0.7);
     font-size: 20px;
     @media screen and (max-width: 600px) {
         display: none;

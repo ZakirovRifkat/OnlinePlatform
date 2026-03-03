@@ -136,8 +136,8 @@ export const Content = ({
                 transition={CONTENT_TRANSITION}
             >
                 <GovernorModel {...governorModelProps} />
-                <Icon animate={isModelLoaded} alt={"logo"} src={logo} />
-                <TitleMainBanner animate={isModelLoaded}>
+                <Icon $animate={isModelLoaded} alt={"logo"} src={logo} />
+                <TitleMainBanner $animate={isModelLoaded}>
                     Интерактивная онлайн–лаборатория
                 </TitleMainBanner>
                 <ControlPanel
