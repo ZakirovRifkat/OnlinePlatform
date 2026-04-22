@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Plot from "react-plotly.js";
 import type { ModelCardProps } from "./types";
 import { Container } from "./styles";
@@ -14,8 +14,9 @@ export const ModelCard = (props: ModelCardProps) => {
 
     const intervalIdRef = useRef<number | null>(null);
 
-    const [yData, setYData] = useState<number[]>(() =>
-        props.solution?.map((row) => row[0]),
+    const yData = useMemo(
+        () => props.solution?.map((row) => row[0]) ?? [],
+        [props.solution],
     );
 
     const func = () => {

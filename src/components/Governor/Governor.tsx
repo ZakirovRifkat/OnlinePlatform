@@ -56,7 +56,6 @@ export const Governor = (props: GovernorProps) => {
     const sleeveRef = useRef<THREE.Group | null>(null);
     const sleeveGuideRef = useRef<THREE.Group | null>(null);
     const sleeveKnucklePivotRef = useRef<THREE.Group | null>(null);
-    const sleeveLiftBaseRef = useRef<number | null>(null);
 
     const showPivotHelper = false;
 
@@ -326,6 +325,8 @@ export const Governor = (props: GovernorProps) => {
             leftHandleDown.current.rotation.x =
                 THREE.MathUtils.degToRad(angleDown);
 
+            // const delta = Math.abs(sleeveRef.current.position.y - speedSleeve);
+
             // Смещаем ползунок по оси Y.
             sleeveRef.current.position.y = speedSleeve;
 
@@ -390,12 +391,10 @@ export const Governor = (props: GovernorProps) => {
                 }
             }
 
-            if (sleeveLiftBaseRef.current === null) {
-                sleeveLiftBaseRef.current = speedSleeve;
-            }
+            // console.log(Math.asin(delta / 10));
 
             sleeveKnucklePivotRef.current.rotation.z =
-                -Math.PI / 2.65 + THREE.MathUtils.degToRad(-1 * angleUp);
+                -1 * THREE.MathUtils.degToRad(angleUp) + 1.96349540849;
 
             rightHandleUp.current.rotation.z =
                 THREE.MathUtils.degToRad(angleUp);
@@ -497,10 +496,7 @@ export const Governor = (props: GovernorProps) => {
                                 {...standMaterialMaps}
                             />
                         </mesh>
-                        <group
-                            position={[0, -0.5, 0]}
-                            rotation={[0, Math.PI / 13.6, 0]}
-                        >
+                        <group position={[0, -0.5, 0]} rotation={[0, 0, 0]}>
                             <mesh
                                 geometry={sleeveBallGeometry}
                                 position={[1, 0, 0]}
@@ -511,38 +507,10 @@ export const Governor = (props: GovernorProps) => {
                                     {...standMaterialMaps}
                                 />
                             </mesh>
-                            <group
-                                ref={sleeveKnucklePivotRef}
-                                position={[5.5, 0, 0]}
-                                rotation={[0, 0, Math.PI / 2]}
-                            >
-                                {showPivotHelper && (
-                                    <>
-                                        <axesHelper args={[1.2]} />
-                                        <mesh>
-                                            <sphereGeometry
-                                                args={[0.09, 24, 24]}
-                                            />
-                                            <meshBasicMaterial
-                                                color={"#ff00ff"}
-                                            />
-                                        </mesh>
-                                    </>
-                                )}
-                                <mesh>
-                                    <cylinderGeometry
-                                        args={[0.14, 0.14, 10, 32]}
-                                    />
-                                    <meshStandardMaterial
-                                        color={"#b8bec8"}
-                                        metalness={0.85}
-                                        roughness={0.3}
-                                    />
-                                </mesh>
-                            </group>
                         </group>
                     </group>
                 </group>
+
                 {/* Стержень */}
                 <mesh position={[-5.825, -4.8, 0]}>
                     <Spindle {...metalMaps} />
@@ -554,9 +522,29 @@ export const Governor = (props: GovernorProps) => {
                 </mesh>
             </group>
             <group
-                position={[0.218, -7.58, 0]}
-                rotation={[0, 0.22, Math.PI / 2]}
+                ref={sleeveKnucklePivotRef}
+                position={[5.3, -3.8, 0]}
+                rotation={[0, 0, Math.PI / 2]}
             >
+                {showPivotHelper && (
+                    <>
+                        <axesHelper args={[1.2]} />
+                        <mesh>
+                            <sphereGeometry args={[0.09, 24, 24]} />
+                            <meshBasicMaterial color={"#ff00ff"} />
+                        </mesh>
+                    </>
+                )}
+                <mesh>
+                    <cylinderGeometry args={[0.14, 0.14, 10, 32]} />
+                    <meshStandardMaterial
+                        color={"#b8bec8"}
+                        metalness={0.85}
+                        roughness={0.3}
+                    />
+                </mesh>
+            </group>
+            <group position={[0.218, -7.58, 0]} rotation={[0, 0, Math.PI / 2]}>
                 <group ref={engineGearSpinRef}>
                     <EngineGear {...metalMaps} />
                     <mesh
@@ -601,9 +589,9 @@ export const Governor = (props: GovernorProps) => {
                 </group>
 
                 {/* Заслонка между блоками воды */}
-                <group ref={gateRef} position={[1, -10.25, -0.24]}>
+                <group ref={gateRef} position={[2.2, -10.25, -0.24]}>
                     <mesh position={[0, 0, 0]}>
-                        <boxGeometry args={[1.5, gateHeight, 0.95]} />
+                        <boxGeometry args={[3.6, gateHeight, 0.95]} />
                         <meshStandardMaterial
                             displacementScale={0}
                             color={"#b8bec8"}

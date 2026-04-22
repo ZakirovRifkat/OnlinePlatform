@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import type { ParamControlProps } from "./types";
 import {
@@ -11,7 +10,17 @@ import {
     TabsContainer,
 } from "./styles";
 
-export const ParamControl = (props: ParamControlProps) => {
+export const ParamControl = ({
+    setType,
+    initialConditions,
+    setInitialConditins,
+    aParams,
+    setAParams,
+    f0Params,
+    setF0Params,
+    mParams,
+    setMParams,
+}: ParamControlProps) => {
     const [articleSystem, setArticleSystem] = useState(
         () => localStorage.getItem("type") === "true",
     );
@@ -30,8 +39,8 @@ export const ParamControl = (props: ParamControlProps) => {
 
     useEffect(() => {
         localStorage.setItem("type", String(articleSystem));
-        props.setType(articleSystem);
-    }, [articleSystem, props.setType]);
+        setType(articleSystem);
+    }, [articleSystem, setType]);
     return (
         <Container
             initial={{ opacity: 0 }}
@@ -107,9 +116,9 @@ export const ParamControl = (props: ParamControlProps) => {
                             скорость ώ
                         </div>
                         <Input
-                            defaultValue={props.initialConditions[0]}
+                            defaultValue={initialConditions[0]}
                             onChange={(e) => {
-                                props.setInitialConditins([
+                                setInitialConditins([
                                     Number(e.target.value),
                                     0,
                                     1,
@@ -121,9 +130,9 @@ export const ParamControl = (props: ParamControlProps) => {
                     <InputText>
                         <div>Коэффициент трения</div>{" "}
                         <Input
-                            defaultValue={props.aParams}
+                            defaultValue={aParams}
                             onChange={(e) => {
-                                props.setAParams(Number(e.target.value));
+                                setAParams(Number(e.target.value));
                             }}
                         />
                         <Emasure>Н/кг*мс^2</Emasure>
@@ -131,9 +140,9 @@ export const ParamControl = (props: ParamControlProps) => {
                     <InputText>
                         <div>Внешняя сила</div>{" "}
                         <Input
-                            defaultValue={props.f0Params}
+                            defaultValue={f0Params}
                             onChange={(e) => {
-                                props.setF0Params(Number(e.target.value));
+                                setF0Params(Number(e.target.value));
                             }}
                         />
                         <Emasure>Н</Emasure>
@@ -141,9 +150,9 @@ export const ParamControl = (props: ParamControlProps) => {
                     <InputText>
                         <div>Масса</div>{" "}
                         <Input
-                            defaultValue={props.mParams}
+                            defaultValue={mParams}
                             onChange={(e) => {
-                                props.setMParams(Number(e.target.value));
+                                setMParams(Number(e.target.value));
                             }}
                         />
                         <Emasure>Кг</Emasure>

@@ -1,8 +1,7 @@
 import { Flex, Typography } from "antd";
-import type { InfoControlProps } from "./types";
 import { Container } from "./styles";
 
-export const InfoControl = (_props: InfoControlProps) => {
+export const InfoControl = () => {
     return (
         <Container
             initial={{ opacity: 0 }}

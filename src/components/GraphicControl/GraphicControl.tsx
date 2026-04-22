@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { ModelCard } from "../ModelCard";
 import { ArticleModel } from "../ArticleModel";
 import type { GraphicControlProps } from "./types";
