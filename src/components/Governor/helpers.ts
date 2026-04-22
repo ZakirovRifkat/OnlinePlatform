@@ -2,10 +2,6 @@
 export const metalTextureName = (mapType: string) =>
     `/Metal/Metal035_1K-JPG_${mapType}.jpg`;
 
-// Читает числовой массив из localStorage (значения через запятую).
-export const getStorageNumberArray = (key: string): number[] =>
-    localStorage.getItem(key)?.split(",").map(Number) ?? [];
-
 export type KinematicsArgs = {
     type: boolean;
     speed: number;

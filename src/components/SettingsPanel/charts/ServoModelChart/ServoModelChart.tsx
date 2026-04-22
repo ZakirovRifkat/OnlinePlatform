@@ -1,23 +1,18 @@
 import Plot from "react-plotly.js";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Flex, Result, Spin, Tabs, TabsProps } from "antd";
+import { observer } from "mobx-react-lite";
 import { fetchModelData } from "../../../../api/modelApi";
-import type { ServoModelChartProps } from "./types";
+import {
+    useContentUiStore,
+    useServoStore,
+} from "../../../../store/contentStore";
 import { Container } from "./styles";
 
-export const ServoModelChart = (props: ServoModelChartProps) => {
-    const [A] = useState(() => Number(localStorage.getItem("A")) || 1.5);
-    const [B] = useState(() => Number(localStorage.getItem("B")) || 1);
-    const [C] = useState(() => Number(localStorage.getItem("C")) || 0);
-    const [delta] = useState(
-        () => Number(localStorage.getItem("delta")) || 1.3,
-    );
-    const [initial] = useState(
-        () =>
-            localStorage.getItem("initial")?.split(";").map(Number) || [
-                0, 0, -0.65, 0,
-            ],
-    );
+export const ServoModelChart = observer(() => {
+    const uiStore = useContentUiStore();
+    const servoStore = useServoStore();
+
     const [data, setData] = useState<{
         x: number[];
         y: number[];
@@ -36,17 +31,13 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
     const [timeData, setTimeData] = useState<number[]>([]);
     const [currentTime, setCurrentTime] = useState(0);
 
-    const [minZ, setMinZ] = useState<number>();
-    const [maxZ, setMaxZ] = useState<number>();
-    const [minY, setMinY] = useState<number>();
-    const [maxY, setMaxY] = useState<number>();
     const [error, setError] = useState<unknown>();
     // const [index, setIndex] = useState<number>(0);
 
     useEffect(() => {
         let id: number | null = null;
         let index = 0;
-        if (!loading && props.play && timeData.length > 0) {
+        if (!loading && uiStore.isPlay && timeData.length > 0) {
             id = setInterval(() => {
                 if (index >= timeData.length) {
                     if (id) {
@@ -63,17 +54,11 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
                 clearInterval(id);
             }
         };
-    }, [loading, props.play, timeData]);
+    }, [loading, uiStore.isPlay, timeData]);
 
     const getParams = useCallback(() => {
         setError(undefined);
-        fetchModelData({
-            A,
-            B,
-            C,
-            delta,
-            initial,
-        })
+        fetchModelData(servoStore.requestParams)
             .then((data) => {
                 // y[:, 2]
                 const xValues = data.y.map((row: number[]) => row[2]);
@@ -84,14 +69,8 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
                 // y[:, 1]
                 const zValues = data.y.map((row: number[]) => row[1]);
 
-                localStorage.setItem("xValues", String(xValues));
-                localStorage.setItem("yValues", String(yValues));
-                localStorage.setItem("zValues", String(zValues));
+                servoStore.setServoSeries(xValues, yValues, zValues);
                 setTimeData(data.t);
-                setMinZ(() => Math.min(...zValues));
-                setMaxZ(() => Math.max(...zValues));
-                setMinY(() => Math.min(...yValues));
-                setMaxY(() => Math.max(...yValues));
                 setData({
                     x: data.t,
                     y: zValues,
@@ -113,11 +92,21 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
                 setError(error);
                 // Обработка ошибки
             });
-    }, [A, B, C, delta, initial]);
+    }, [
+        servoStore,
+        servoStore.servoA,
+        servoStore.servoB,
+        servoStore.servoC,
+        servoStore.servoDelta,
+        servoStore.servoInitial,
+    ]);
 
     useEffect(() => {
         getParams();
-    }, [getParams, props.play]);
+    }, [getParams, uiStore.isPlay]);
+
+    const zRange = servoStore.zRange;
+    const yRange = servoStore.yRange;
 
     if (loading) {
         return (
@@ -143,14 +132,7 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
         );
     }
 
-    if (
-        !data ||
-        !data2 ||
-        minZ === undefined ||
-        maxZ === undefined ||
-        minY === undefined ||
-        maxY === undefined
-    ) {
+    if (!data || !data2 || !zRange || !yRange) {
         return (
             <Container>
                 <Spin />
@@ -176,7 +158,7 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
                                 type: "scatter",
                                 mode: "lines",
                                 x: [currentTime, currentTime],
-                                y: [minZ! * 1.1, maxZ! * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
+                                y: [zRange.min * 1.1, zRange.max * 1.1],
                                 showlegend: false,
                                 textinfo: "none",
                                 name: "Линия",
@@ -210,7 +192,7 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
                                 type: "scatter",
                                 mode: "lines",
                                 x: [currentTime, currentTime],
-                                y: [minY! * 1.1, maxY! * 1.1], // Меняйте в зависимости от диапазона оси y на вашем графике
+                                y: [yRange.min * 1.1, yRange.max * 1.1],
                                 showlegend: false,
                                 textinfo: "none",
                                 name: "Линия",
@@ -246,4 +228,4 @@ export const ServoModelChart = (props: ServoModelChartProps) => {
             )}
         </>
     );
-};
+});

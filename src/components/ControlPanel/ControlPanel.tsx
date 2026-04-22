@@ -7,8 +7,9 @@ import {
     PauseCircleOutlined,
 } from "@ant-design/icons";
 import { Tooltip, message } from "antd";
+import { observer } from "mobx-react-lite";
 import { useNavigate } from "react-router-dom";
-import type { ControlPanelProps } from "./types";
+import { useContentUiStore } from "../../store/contentStore";
 import { Container, ContainerIcon } from "./styles";
 
 const ICON_STYLE = {
@@ -16,7 +17,8 @@ const ICON_STYLE = {
     color: "white",
 };
 
-export const ControlPanel = (props: ControlPanelProps) => {
+export const ControlPanel = observer(() => {
+    const uiStore = useContentUiStore();
     const navigate = useNavigate();
     const [messageApi, contextHolder] = message.useMessage();
 
@@ -27,19 +29,16 @@ export const ControlPanel = (props: ControlPanelProps) => {
         messageApi.error(message);
     };
 
-    const toggleControl = (value: "params" | "graphic") => {
-        props.setControl(props.controlValue === value ? null : value);
-    };
-
     const toggleOrbit = () => {
-        props.setOrbit(!props.isOrbit);
-        props.isOrbit
-            ? warn("Управление: отключено")
-            : success("Управление: включено");
+        const nextOrbit = !uiStore.isOrbit;
+        uiStore.setOrbit(nextOrbit);
+        nextOrbit
+            ? success("Управление: включено")
+            : warn("Управление: отключено");
     };
 
     const togglePlay = () => {
-        props.setPlay(!props.play);
+        uiStore.togglePlay();
     };
 
     return (
@@ -56,12 +55,12 @@ export const ControlPanel = (props: ControlPanelProps) => {
                 </ContainerIcon>
             </Tooltip>
             <Tooltip title={"Настройка системы"} placement="left">
-                <ContainerIcon onClick={() => toggleControl("params")}>
+                <ContainerIcon onClick={() => uiStore.toggleControl("params")}>
                     <SettingOutlined style={ICON_STYLE} />
                 </ContainerIcon>
             </Tooltip>
             <Tooltip title={"График"} placement="left">
-                <ContainerIcon onClick={() => toggleControl("graphic")}>
+                <ContainerIcon onClick={() => uiStore.toggleControl("graphic")}>
                     <LineChartOutlined style={ICON_STYLE} />
                 </ContainerIcon>
             </Tooltip>
@@ -72,7 +71,7 @@ export const ControlPanel = (props: ControlPanelProps) => {
             </Tooltip>
             <Tooltip title={"Старт/Пауза"} placement="left">
                 <ContainerIcon onClick={togglePlay}>
-                    {props.play ? (
+                    {uiStore.isPlay ? (
                         <PauseCircleOutlined style={ICON_STYLE} />
                     ) : (
                         <PlayCircleOutlined style={ICON_STYLE} />
@@ -81,4 +80,4 @@ export const ControlPanel = (props: ControlPanelProps) => {
             </Tooltip>
         </Container>
     );
-};
+});

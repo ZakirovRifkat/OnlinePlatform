@@ -15,7 +15,7 @@ export const GovernorModel = (props: GovernorModelProps) => {
             }}
             camera={{
                 fov: 50,
-                position: [0, 2, -25],
+                position: [0, 2, 25],
             }}
         >
             <scene backgroundIntensity={0}>

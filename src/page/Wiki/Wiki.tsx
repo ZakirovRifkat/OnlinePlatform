@@ -5,9 +5,9 @@ import remarkMath from "remark-math";
 import "katex/dist/katex.min.css"; // `rehype-katex` does not import the CSS for you
 import { useState } from "react";
 import { Flex, Image, List, Modal, Typography } from "antd";
+import { observer } from "mobx-react-lite";
 import "../style.css";
 import { CaretRightOutlined } from "@ant-design/icons";
-import { CopyBlock, googlecode } from "react-code-blocks";
 import {
     CodeBlock,
     Container,
@@ -23,6 +23,11 @@ import {
     SYSTEM_MARKDOWN,
     WIKI_PAGE_VARIANTS,
 } from "./constants";
+import {
+    createWikiStore,
+    useWikiStore,
+    WikiStoreContext,
+} from "../../store/wikiStore";
 const TextMd = ({ children }: TextMdProps) => {
     return (
         <Markdown
@@ -38,26 +43,9 @@ const TextMd = ({ children }: TextMdProps) => {
         </Markdown>
     );
 };
-export const Wiki = () => {
+const WikiView = observer(() => {
     const navigate = useNavigate();
-
-    const [isCodeOpen, setIsCodeOpen] = useState(false);
-    const [isLiteratureOpen, setIsLiteratureOpen] = useState(false);
-    const [selectImg, setSelectImg] = useState(false);
-    const [isOpenModal, setIsOpenModal] = useState(false);
-    const [isOpenModal2, setIsOpenModal2] = useState(false);
-
-    const handleCancel = () => {
-        setIsOpenModal(false);
-        setIsOpenModal2(false);
-    };
-
-    const handleSelectImg = () => {
-        setSelectImg(true);
-        setTimeout(() => {
-            setSelectImg(false);
-        }, SELECT_IMG_HIGHLIGHT_TIMEOUT);
-    };
+    const store = useWikiStore();
 
     return (
         <Container
@@ -78,12 +66,12 @@ export const Wiki = () => {
                     e.stopPropagation();
                 }}
             >
-                <Typography.Text style={{ fontSize: 18, fontWeight: 400 }}>
+                <div style={{ fontSize: 18, fontWeight: 400 }}>
                     <Typography.Title level={1}>
                         {" "}
                         <b>Теория</b>{" "}
                     </Typography.Title>
-                    <ImgContainer $back={selectImg}>
+                    <ImgContainer $back={store.selectImg}>
                         <Flex vertical gap={30}>
                             <figure>
                                 <img
@@ -116,7 +104,7 @@ export const Wiki = () => {
                         является одним из ключевых изобретений индустриальной
                         эпохи.
                     </p>
-                    <p>
+                    <div>
                         <Typography.Title level={4}>
                             <b>Историческая справка</b>
                         </Typography.Title>
@@ -147,7 +135,7 @@ export const Wiki = () => {
                                 cursor: "pointer",
                             }}
                             onClick={() => {
-                                setIsOpenModal2(true);
+                                store.openNewcomenModal();
                             }}
                         >
                             паровая машина Ньюкомена
@@ -170,18 +158,18 @@ export const Wiki = () => {
                                 cursor: "pointer",
                             }}
                             onClick={() => {
-                                setIsOpenModal(true);
+                                store.openWattModal();
                             }}
                         >
                             паровой машиной Уатта
                         </i>
                         .
-                    </p>
+                    </div>
                     <Modal
-                        open={isOpenModal}
+                        open={store.isOpenModal}
                         closeIcon={false}
                         footer={<></>}
-                        onCancel={handleCancel}
+                        onCancel={store.closeModals}
                     >
                         <Image src="/orig.gif"></Image>
                         <Typography.Text type="secondary">
@@ -190,10 +178,10 @@ export const Wiki = () => {
                         </Typography.Text>
                     </Modal>
                     <Modal
-                        open={isOpenModal2}
+                        open={store.isOpenModal2}
                         closeIcon={false}
                         footer={<></>}
-                        onCancel={handleCancel}
+                        onCancel={store.closeModals}
                         width={"max-content"}
                     >
                         <Image src="/watt9.gif"></Image>
@@ -202,11 +190,11 @@ export const Wiki = () => {
                             www.critical.ru/calendar/1901watt.htm
                         </Typography.Text>
                     </Modal>
-                    <p>
+                    <div>
                         <Typography.Title level={4}>
                             <b>Основной принцип</b>
                         </Typography.Title>
-                        <ImgContainer $back={selectImg}>
+                        <ImgContainer $back={store.selectImg}>
                             <figure style={{ position: "relative" }}>
                                 <img src="/watt.png" height={570} />
                                 <figcaption
@@ -271,15 +259,19 @@ export const Wiki = () => {
                         </ImgContainer>
                         Регулятор использует центробежные силы, создаваемые
                         вращением, для регулирования работы двигателя.
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         <Typography.Title level={4}>
                             <b>Строение</b>
                         </Typography.Title>
                         Регулятор Уатта{" "}
                         <Typography.Text
                             type="secondary"
-                            onClick={handleSelectImg}
+                            onClick={() => {
+                                store.highlightImage(
+                                    SELECT_IMG_HIGHLIGHT_TIMEOUT,
+                                );
+                            }}
                             style={{
                                 cursor: "pointer",
                             }}
@@ -320,9 +312,9 @@ export const Wiki = () => {
                             [4]
                         </sup>{" "}
                         с заслонкой машины.
-                    </p>
+                    </div>
 
-                    <p>
+                    <div>
                         <Typography.Title level={4}>
                             <b>Действие</b>
                         </Typography.Title>
@@ -346,15 +338,15 @@ export const Wiki = () => {
                         а только ее снижают. Современное название ошибки —
                         статическая ошибка, а регулятора — статический
                         регулятор.
-                    </p>
+                    </div>
 
-                    <p>
+                    <div>
                         <Typography.Title level={4}>
                             {" "}
                             <b>Уравнения описывающие систему: </b>{" "}
                         </Typography.Title>
-                    </p>
-                </Typography.Text>
+                    </div>
+                </div>
 
                 <Markdown
                     remarkPlugins={[remarkMath]}
@@ -365,46 +357,52 @@ export const Wiki = () => {
                 <Typography.Title
                     level={4}
                     style={{ cursor: "pointer" }}
-                    onClick={() => setIsCodeOpen(!isCodeOpen)}
+                    onClick={store.toggleCodeOpen}
                 >
                     <CaretRightOutlined
                         style={{
                             transition: "transform 0.3s ease-out",
-                            transform: `rotate(${isCodeOpen ? "90deg" : "0"})`,
+                            transform: `rotate(${store.isCodeOpen ? "90deg" : "0"})`,
                         }}
                     />
                     <b>Приложение</b>{" "}
                 </Typography.Title>
                 <CodeBlock
-                    $open={isCodeOpen}
+                    $open={store.isCodeOpen}
                     style={{
                         margin: "auto",
                     }}
                 >
-                    <CopyBlock
-                        language={"ts"}
-                        text={CODE_MARKDOWN}
-                        showLineNumbers={false}
-                        theme={googlecode}
-                        codeBlock
-                    />
+                    <pre
+                        style={{
+                            margin: 0,
+                            padding: "16px",
+                            borderRadius: "8px",
+                            background: "#f5f5f5",
+                            overflowX: "auto",
+                            fontSize: "14px",
+                            lineHeight: 1.5,
+                        }}
+                    >
+                        <code>{CODE_MARKDOWN}</code>
+                    </pre>
                 </CodeBlock>
                 <Typography.Title
                     level={4}
                     style={{ cursor: "pointer" }}
-                    onClick={() => setIsLiteratureOpen(!isLiteratureOpen)}
+                    onClick={store.toggleLiteratureOpen}
                 >
                     <CaretRightOutlined
                         style={{
                             transition: "transform 0.3s ease-out",
                             transform: `rotate(${
-                                isLiteratureOpen ? "90deg" : "0"
+                                store.isLiteratureOpen ? "90deg" : "0"
                             })`,
                         }}
                     />
                     <b>Литература</b>
                 </Typography.Title>
-                <CodeBlock $open={isLiteratureOpen}>
+                <CodeBlock $open={store.isLiteratureOpen}>
                     <List
                         itemLayout="horizontal"
                         dataSource={LITERATURE_DATA}
@@ -434,5 +432,15 @@ export const Wiki = () => {
                 </CodeBlock>
             </ContentContainer>
         </Container>
+    );
+});
+
+export const Wiki = () => {
+    const [store] = useState(createWikiStore);
+
+    return (
+        <WikiStoreContext.Provider value={store}>
+            <WikiView />
+        </WikiStoreContext.Provider>
     );
 };

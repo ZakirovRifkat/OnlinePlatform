@@ -1,5 +1,8 @@
-import { useState, useEffect } from "react";
-import type { ParametersPanelProps } from "./types";
+import { observer } from "mobx-react-lite";
+import {
+    useContentUiStore,
+    useServoStore,
+} from "../../../../store/contentStore";
 import {
     Container,
     DataInputContainer,
@@ -10,37 +13,10 @@ import {
     TabsContainer,
 } from "./styles";
 
-export const ParametersPanel = ({
-    setType,
-    initialConditions,
-    setInitialConditins,
-    aParams,
-    setAParams,
-    f0Params,
-    setF0Params,
-    mParams,
-    setMParams,
-}: ParametersPanelProps) => {
-    const [articleSystem, setArticleSystem] = useState(
-        () => localStorage.getItem("type") === "true",
-    );
+export const ParametersPanel = observer(() => {
+    const uiStore = useContentUiStore();
+    const servoStore = useServoStore();
 
-    useEffect(() => {
-        const a = localStorage.getItem("A");
-        const b = localStorage.getItem("B");
-        const c = localStorage.getItem("C");
-        if (!(a && b && c)) {
-            localStorage.setItem("A", "1.5");
-            localStorage.setItem("B", "1");
-            localStorage.setItem("C", "0");
-            localStorage.setItem("delta", "1.3");
-        }
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem("type", String(articleSystem));
-        setType(articleSystem);
-    }, [articleSystem, setType]);
     return (
         <Container
             initial={{ opacity: 0 }}
@@ -48,67 +24,66 @@ export const ParametersPanel = ({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <TabsContainer $active={articleSystem}>
-                <Tab onClick={() => setArticleSystem(false)}>
+            <TabsContainer $active={uiStore.type}>
+                <Tab onClick={() => uiStore.setType(false)}>
                     Классическая модель регулятора
                 </Tab>
-                <Tab onClick={() => setArticleSystem(true)}>
+                <Tab onClick={() => uiStore.setType(true)}>
                     Модель с<br /> сервомотором
                 </Tab>
             </TabsContainer>
-            {articleSystem && (
+            {uiStore.type && (
                 <DataInputContainer>
                     <InputText>
                         <div>Коэффициент A</div>{" "}
                         <Input
-                            defaultValue={localStorage.getItem("A") || 1.5}
+                            value={servoStore.servoA}
                             onChange={(e) => {
-                                localStorage.setItem("A", e.target.value);
+                                servoStore.setServoA(Number(e.target.value));
                             }}
                         />
                     </InputText>
                     <InputText>
                         <div>Коэффициент B</div>
                         <Input
-                            defaultValue={localStorage.getItem("B") || 1}
+                            value={servoStore.servoB}
                             onChange={(e) => {
-                                localStorage.setItem("B", e.target.value);
+                                servoStore.setServoB(Number(e.target.value));
                             }}
                         />
                     </InputText>
                     <InputText>
                         <div>Коэффициент C</div>
                         <Input
-                            defaultValue={localStorage.getItem("C") || 0}
+                            value={servoStore.servoC}
                             onChange={(e) => {
-                                localStorage.setItem("C", e.target.value);
+                                servoStore.setServoC(Number(e.target.value));
                             }}
                         />
                     </InputText>
                     <InputText>
                         <div>Коэффициент сервомотора (δ)</div>
                         <Input
-                            defaultValue={localStorage.getItem("delta") || 1.3}
+                            value={servoStore.servoDelta}
                             onChange={(e) => {
-                                localStorage.setItem("delta", e.target.value);
+                                servoStore.setServoDelta(
+                                    Number(e.target.value),
+                                );
                             }}
                         />
                     </InputText>
                     <InputText>
                         <div>Начальные данные</div>
                         <Input
-                            defaultValue={
-                                localStorage.getItem("initial") ||
-                                "0; 0; -0.65; 0"
-                            }
+                            value={servoStore.servoInitial}
                             onChange={(e) => {
-                                localStorage.setItem("initial", e.target.value);
+                                servoStore.setServoInitial(e.target.value);
                             }}
                         />
                     </InputText>
                 </DataInputContainer>
             )}
-            {!articleSystem && (
+            {!uiStore.type && (
                 <DataInputContainer>
                     <InputText>
                         <div>
@@ -116,9 +91,9 @@ export const ParametersPanel = ({
                             скорость ώ
                         </div>
                         <Input
-                            defaultValue={initialConditions[0]}
+                            value={uiStore.initialConditions[0]}
                             onChange={(e) => {
-                                setInitialConditins([
+                                uiStore.setInitialConditions([
                                     Number(e.target.value),
                                     0,
                                     1,
@@ -130,9 +105,9 @@ export const ParametersPanel = ({
                     <InputText>
                         <div>Коэффициент трения</div>{" "}
                         <Input
-                            defaultValue={aParams}
+                            value={uiStore.aParams}
                             onChange={(e) => {
-                                setAParams(Number(e.target.value));
+                                uiStore.setAParams(Number(e.target.value));
                             }}
                         />
                         <Emasure>Н/кг*мс^2</Emasure>
@@ -140,9 +115,9 @@ export const ParametersPanel = ({
                     <InputText>
                         <div>Внешняя сила</div>{" "}
                         <Input
-                            defaultValue={f0Params}
+                            value={uiStore.f0Params}
                             onChange={(e) => {
-                                setF0Params(Number(e.target.value));
+                                uiStore.setF0Params(Number(e.target.value));
                             }}
                         />
                         <Emasure>Н</Emasure>
@@ -150,9 +125,9 @@ export const ParametersPanel = ({
                     <InputText>
                         <div>Масса</div>{" "}
                         <Input
-                            defaultValue={mParams}
+                            value={uiStore.mParams}
                             onChange={(e) => {
-                                setMParams(Number(e.target.value));
+                                uiStore.setMParams(Number(e.target.value));
                             }}
                         />
                         <Emasure>Кг</Emasure>
@@ -161,4 +136,4 @@ export const ParametersPanel = ({
             )}
         </Container>
     );
-};
+});

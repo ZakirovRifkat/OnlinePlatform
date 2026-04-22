@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { getStorageNumberArray } from "../helpers";
 import type { SolutionData } from "../types";
+import { useServoStore } from "../../../store/contentStore";
 
 type UseGovernorSeriesDataArgs = {
     solution: SolutionData;
@@ -17,6 +17,7 @@ export const useGovernorSeriesData = ({
     type,
     play,
 }: UseGovernorSeriesDataArgs) => {
+    const servoStore = useServoStore();
     const [yData, setYData] = useState<number[]>([]);
     const [rotor, setRotor] = useState<number[]>([]);
     const [minSpeed, setMinSpeed] = useState(0);
@@ -24,16 +25,23 @@ export const useGovernorSeriesData = ({
 
     // Источник данных зависит от выбранного типа модели.
     // Для классической модели берем решение ODE из props.solution,
-    // для сервомоторной — подготовленные массивы из localStorage.
+    // для сервомоторной — ряды, рассчитанные в ServoModelChart и сохраненные в store.
     useEffect(() => {
         if (!type) {
             setYData(solution?.map((row) => row[0]) ?? []);
+            setRotor([]);
             return;
         }
 
-        setYData(getStorageNumberArray("zValues"));
-        setRotor(getStorageNumberArray("yValues"));
-    }, [solution, type, play]);
+        setYData(servoStore.servoZValues);
+        setRotor(servoStore.servoYValues);
+    }, [
+        solution,
+        type,
+        play,
+        servoStore.servoYValues,
+        servoStore.servoZValues,
+    ]);
 
     // По текущему ряду скоростей считаем диапазон,
     // который используется в формулах углов/смещений.

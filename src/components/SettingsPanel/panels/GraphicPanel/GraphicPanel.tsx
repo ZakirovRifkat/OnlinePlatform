@@ -1,10 +1,12 @@
 import { ClassicModelChart } from "../../charts/ClassicModelChart";
 import { ServoModelChart } from "../../charts/ServoModelChart";
+import { observer } from "mobx-react-lite";
+import { useContentUiStore } from "../../../../store/contentStore";
 import type { GraphicPanelProps } from "./types";
 import { Container } from "./styles";
 
-export const GraphicPanel = (props: GraphicPanelProps) => {
-    const type = localStorage.getItem("type") === "true";
+export const GraphicPanel = observer((props: GraphicPanelProps) => {
+    const uiStore = useContentUiStore();
 
     return (
         <Container
@@ -13,14 +15,14 @@ export const GraphicPanel = (props: GraphicPanelProps) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            {type && <ServoModelChart play={props.play} />}
-            {!type && (
+            {uiStore.type && <ServoModelChart />}
+            {!uiStore.type && (
                 <ClassicModelChart
                     tSpan={props.tData}
                     solution={props.solution}
-                    play={props.play}
+                    play={uiStore.isPlay}
                 />
             )}
         </Container>
     );
-};
+});
