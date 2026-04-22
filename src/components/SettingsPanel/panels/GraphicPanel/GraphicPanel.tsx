@@ -1,9 +1,9 @@
-import { ModelCard } from "../ModelCard";
-import { ArticleModel } from "../ArticleModel";
-import type { GraphicControlProps } from "./types";
+import { ClassicModelChart } from "../../charts/ClassicModelChart";
+import { ServoModelChart } from "../../charts/ServoModelChart";
+import type { GraphicPanelProps } from "./types";
 import { Container } from "./styles";
 
-export const GraphicControl = (props: GraphicControlProps) => {
+export const GraphicPanel = (props: GraphicPanelProps) => {
     const type = localStorage.getItem("type") === "true";
 
     return (
@@ -13,9 +13,9 @@ export const GraphicControl = (props: GraphicControlProps) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            {type && <ArticleModel play={props.play} />}
+            {type && <ServoModelChart play={props.play} />}
             {!type && (
-                <ModelCard
+                <ClassicModelChart
                     tSpan={props.tData}
                     solution={props.solution}
                     play={props.play}

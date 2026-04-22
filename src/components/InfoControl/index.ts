@@ -1,1 +1,0 @@
-export { InfoControl } from "./InfoControl";

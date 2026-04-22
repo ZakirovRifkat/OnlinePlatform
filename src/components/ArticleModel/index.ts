@@ -1,1 +1,0 @@
-export { ArticleModel } from "./ArticleModel";

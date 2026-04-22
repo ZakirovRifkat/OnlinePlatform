@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import type { ParamControlProps } from "./types";
+import type { ParametersPanelProps } from "./types";
 import {
     Container,
     DataInputContainer,
@@ -10,7 +10,7 @@ import {
     TabsContainer,
 } from "./styles";
 
-export const ParamControl = ({
+export const ParametersPanel = ({
     setType,
     initialConditions,
     setInitialConditins,
@@ -20,7 +20,7 @@ export const ParamControl = ({
     setF0Params,
     mParams,
     setMParams,
-}: ParamControlProps) => {
+}: ParametersPanelProps) => {
     const [articleSystem, setArticleSystem] = useState(
         () => localStorage.getItem("type") === "true",
     );

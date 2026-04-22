@@ -3,7 +3,7 @@ import { GovernorModel } from "../../components/GovernorModel";
 import { AnimatePresence } from "framer-motion";
 import logo from "../assets/logo.svg";
 import { ControlPanel } from "../../components/ControlPanel";
-import { ModalControl } from "../../components/ModalControl";
+import { SettingsPanel } from "../../components/SettingsPanel";
 import { Container, Footer, Icon, TitleMainBanner } from "./styles";
 import type { ContentProps, GovernorState } from "./types";
 import { useGovernorSolution } from "./hooks/useGovernorSolution";
@@ -148,7 +148,7 @@ export const Content = ({
                     setPlay={setIsPlay}
                     play={isPlay}
                 />
-                <ModalControl {...modalProps} />
+                <SettingsPanel {...modalProps} />
 
                 <Footer>
                     <span>{FOOTER_DEPARTMENT}</span>

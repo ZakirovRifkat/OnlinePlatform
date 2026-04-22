@@ -1,7 +1,7 @@
 import type { Dispatch, SetStateAction } from "react";
-import type { GovernorState } from "../../page/Content/types";
+import type { GovernorState } from "../../../../page/Content/types";
 
-export type ParamControlProps = {
+export type ParametersPanelProps = {
     setPlay: Dispatch<SetStateAction<boolean>>;
     setAParams: Dispatch<SetStateAction<number>>;
     setF0Params: Dispatch<SetStateAction<number>>;

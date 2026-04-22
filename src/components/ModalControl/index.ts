@@ -1,1 +1,0 @@
-export { ModalControl } from "./ModalControl";

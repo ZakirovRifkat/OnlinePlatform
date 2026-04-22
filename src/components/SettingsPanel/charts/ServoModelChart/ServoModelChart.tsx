@@ -1,11 +1,11 @@
 import Plot from "react-plotly.js";
 import { useCallback, useEffect, useState } from "react";
 import { Button, Flex, Result, Spin, Tabs, TabsProps } from "antd";
-import { fetchModelData } from "../../api/modelApi";
-import type { ArticleModelProps } from "./types";
+import { fetchModelData } from "../../../../api/modelApi";
+import type { ServoModelChartProps } from "./types";
 import { Container } from "./styles";
 
-export const ArticleModel = (props: ArticleModelProps) => {
+export const ServoModelChart = (props: ServoModelChartProps) => {
     const [A] = useState(() => Number(localStorage.getItem("A")) || 1.5);
     const [B] = useState(() => Number(localStorage.getItem("B")) || 1);
     const [C] = useState(() => Number(localStorage.getItem("C")) || 0);

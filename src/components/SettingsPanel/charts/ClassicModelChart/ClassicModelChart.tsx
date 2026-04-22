@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Plot from "react-plotly.js";
-import type { ModelCardProps } from "./types";
+import type { ClassicModelChartProps } from "./types";
 import { Container } from "./styles";
 
 const layout = {
@@ -9,7 +9,7 @@ const layout = {
     yaxis: { title: "Уголовая корость" },
 };
 
-export const ModelCard = (props: ModelCardProps) => {
+export const ClassicModelChart = (props: ClassicModelChartProps) => {
     const [data, setData] = useState(0);
 
     const intervalIdRef = useRef<number | null>(null);

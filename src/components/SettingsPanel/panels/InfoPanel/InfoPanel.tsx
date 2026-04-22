@@ -1,7 +1,7 @@
 import { Flex, Typography } from "antd";
 import { Container } from "./styles";
 
-export const InfoControl = () => {
+export const InfoPanel = () => {
     return (
         <Container
             initial={{ opacity: 0 }}

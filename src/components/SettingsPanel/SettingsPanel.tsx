@@ -1,18 +1,18 @@
-import { InfoControl } from "../InfoControl";
-import { ParamControl } from "../ParamControl";
-import { GraphicControl } from "../GraphicControl";
+import { InfoPanel } from "./panels/InfoPanel";
+import { ParametersPanel } from "./panels/ParametersPanel";
+import { GraphicPanel } from "./panels/GraphicPanel";
 import { AnimatePresence } from "framer-motion";
-import type { ModalControlProps } from "./types";
+import type { SettingsPanelProps } from "./types";
 import { Container } from "./styles";
 
-export const ModalControl = (props: ModalControlProps) => {
+export const SettingsPanel = (props: SettingsPanelProps) => {
     return (
         <AnimatePresence>
             <Container $shadow={props.controlValue === "params"}>
                 {props.controlValue === "info" ? (
-                    <InfoControl />
+                    <InfoPanel />
                 ) : props.controlValue === "params" ? (
-                    <ParamControl
+                    <ParametersPanel
                         setPlay={props.setPlay}
                         setAParams={props.setAParams}
                         setF0Params={props.setF0Params}
@@ -26,7 +26,7 @@ export const ModalControl = (props: ModalControlProps) => {
                         setType={props.setType}
                     />
                 ) : props.controlValue === "graphic" ? (
-                    <GraphicControl
+                    <GraphicPanel
                         tData={props.tData}
                         solution={props.solution}
                         play={props.play}

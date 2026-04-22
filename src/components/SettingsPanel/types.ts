@@ -2,7 +2,7 @@ import type { Dispatch, SetStateAction } from "react";
 import type { ControlValue, GovernorState } from "../../page/Content/types";
 import type { SolutionData } from "../Governor/types";
 
-export type ModalControlProps = {
+export type SettingsPanelProps = {
     controlValue: ControlValue;
     tData: number[];
     solution: SolutionData;
