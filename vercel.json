@@ -1,12 +1,8 @@
 {
-  "rewrites": [
-    {
-      "source": "/api/:path*",
-      "destination": "https://accompanying-fighter-induced-across.trycloudflare.com/:path*"
-    },
-    {
-      "source": "/((?!.*\\.).*)",
-      "destination": "/index.html"
-    }
-  ]
+    "rewrites": [
+        {
+            "source": "/((?!.*\\.).*)",
+            "destination": "/index.html"
+        }
+    ]
 }
