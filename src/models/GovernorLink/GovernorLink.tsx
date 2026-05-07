@@ -11,7 +11,7 @@ type GovernorLinkGLTF = GLTF & {
 };
 
 export const GovernorLink = (props: MaterialMapsProps) => {
-    const model = useGLTF("/link.glb") as GovernorLinkGLTF;
+    const model = useGLTF("models/link.glb") as GovernorLinkGLTF;
 
     applyMaterialMaps(model.nodes.Link.material as MeshStandardMaterial, props);
 
@@ -26,4 +26,4 @@ export const GovernorLink = (props: MaterialMapsProps) => {
     );
 };
 
-useGLTF.preload("/link.glb");
+useGLTF.preload("models/link.glb");

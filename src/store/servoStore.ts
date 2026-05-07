@@ -80,21 +80,33 @@ export class ServoStore {
     }
 
     setServoA(value: number) {
+        if (!Number.isFinite(value)) {
+            return;
+        }
         this.servoA = value;
         localStorage.setItem("A", String(value));
     }
 
     setServoB(value: number) {
+        if (!Number.isFinite(value)) {
+            return;
+        }
         this.servoB = value;
         localStorage.setItem("B", String(value));
     }
 
     setServoC(value: number) {
+        if (!Number.isFinite(value)) {
+            return;
+        }
         this.servoC = value;
         localStorage.setItem("C", String(value));
     }
 
     setServoDelta(value: number) {
+        if (!Number.isFinite(value)) {
+            return;
+        }
         this.servoDelta = value;
         localStorage.setItem("delta", String(value));
     }

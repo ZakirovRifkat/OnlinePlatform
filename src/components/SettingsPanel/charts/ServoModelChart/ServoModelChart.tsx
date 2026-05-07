@@ -1,117 +1,37 @@
 import Plot from "react-plotly.js";
-import { useCallback, useEffect, useState } from "react";
 import { Button, Flex, Result, Spin, Tabs, TabsProps } from "antd";
 import { observer } from "mobx-react-lite";
-import { fetchModelData } from "../../../../api/modelApi";
 import {
     useContentUiStore,
     useServoStore,
 } from "../../../../store/contentStore";
+import {
+    SERVO_CHART_LAYOUT_SPEED,
+    SERVO_CHART_LAYOUT_SLIDER,
+    SERVO_CHART_STYLE,
+} from "./constants";
+import { useServoPlayback } from "./hooks/useServoPlayback";
+import type { ServoModelChartProps } from "./types";
 import { Container } from "./styles";
 
-export const ServoModelChart = observer(() => {
+export const ServoModelChart = observer((props: ServoModelChartProps) => {
     const uiStore = useContentUiStore();
     const servoStore = useServoStore();
 
-    const [data, setData] = useState<{
-        x: number[];
-        y: number[];
-        mode: string;
-        showlegend: boolean;
-        name: string;
-    }>();
-    const [data2, setData2] = useState<{
-        x: number[];
-        y: number[];
-        mode: string;
-        showlegend: boolean;
-        name: string;
-    }>();
-    const [loading, setLoading] = useState(true);
-    const [timeData, setTimeData] = useState<number[]>([]);
-    const [currentTime, setCurrentTime] = useState(0);
-
-    const [error, setError] = useState<unknown>();
-    // const [index, setIndex] = useState<number>(0);
-
-    useEffect(() => {
-        let id: number | null = null;
-        let index = 0;
-        if (!loading && uiStore.isPlay && timeData.length > 0) {
-            id = setInterval(() => {
-                if (index >= timeData.length) {
-                    if (id) {
-                        clearInterval(id);
-                    }
-                    return;
-                }
-                setCurrentTime(timeData[index]);
-                index++;
-            }, 30);
-        }
-        return () => {
-            if (id) {
-                clearInterval(id);
-            }
-        };
-    }, [loading, uiStore.isPlay, timeData]);
-
-    const getParams = useCallback(() => {
-        setError(undefined);
-        fetchModelData(servoStore.requestParams)
-            .then((data) => {
-                // y[:, 2]
-                const xValues = data.y.map((row: number[]) => row[2]);
-
-                // y[:, 0]
-                const yValues = data.y.map((row: number[]) => row[3]);
-
-                // y[:, 1]
-                const zValues = data.y.map((row: number[]) => row[1]);
-
-                servoStore.setServoSeries(xValues, yValues, zValues);
-                setTimeData(data.t);
-                setData({
-                    x: data.t,
-                    y: zValues,
-                    mode: "lines",
-                    showlegend: false,
-                    name: "Смещение ползунка",
-                });
-                setData2({
-                    x: data.t,
-                    y: yValues,
-                    mode: "lines",
-                    showlegend: false,
-                    name: "Изменение угловой скорости",
-                });
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Ошибка:", error);
-                setError(error);
-                // Обработка ошибки
-            });
-    }, [
-        servoStore,
-        servoStore.servoA,
-        servoStore.servoB,
-        servoStore.servoC,
-        servoStore.servoDelta,
-        servoStore.servoInitial,
-    ]);
-
-    useEffect(() => {
-        getParams();
-    }, [getParams, uiStore.isPlay]);
+    const currentTime = useServoPlayback({
+        isPlay: uiStore.isPlay,
+        playStartedAt: uiStore.playStartedAt,
+        loading: props.loading,
+        timeData: props.timeData,
+    });
 
     const zRange = servoStore.zRange;
     const yRange = servoStore.yRange;
 
-    if (loading) {
+    if (props.loading) {
         return (
             <Container>
-                {Boolean(error) && (
+                {Boolean(props.error) && (
                     <Result
                         status="error"
                         title="Ошибка запроса"
@@ -120,19 +40,19 @@ export const ServoModelChart = observer(() => {
                             <Button
                                 type="primary"
                                 key="console"
-                                onClick={getParams}
+                                onClick={props.onRetry}
                             >
                                 Обновить
                             </Button>,
                         ]}
                     ></Result>
                 )}
-                {!error && <Spin />}
+                {!props.error && <Spin />}
             </Container>
         );
     }
 
-    if (!data || !data2 || !zRange || !yRange) {
+    if (!props.data || !props.data2 || !zRange || !yRange) {
         return (
             <Container>
                 <Spin />
@@ -147,13 +67,9 @@ export const ServoModelChart = observer(() => {
             children: (
                 <div style={{ overflow: "auto" }}>
                     <Plot
-                        style={{
-                            maxWidth: "500px",
-                            maxHeight: "450px",
-                            width: "max-content",
-                        }}
+                        style={SERVO_CHART_STYLE}
                         data={[
-                            data,
+                            props.data,
                             {
                                 type: "scatter",
                                 mode: "lines",
@@ -164,12 +80,7 @@ export const ServoModelChart = observer(() => {
                                 name: "Линия",
                             },
                         ]}
-                        layout={{
-                            orientation: 10,
-                            xaxis: { title: "Время" },
-                            yaxis: { title: "Смещение ползунка" },
-                            title: "Модель с сервомотором",
-                        }}
+                        layout={SERVO_CHART_LAYOUT_SLIDER}
                     />
                 </div>
             ),
@@ -180,14 +91,9 @@ export const ServoModelChart = observer(() => {
             children: (
                 <div style={{ overflow: "auto" }}>
                     <Plot
-                        style={{
-                            maxWidth: "500px",
-                            maxHeight: "450px",
-                            width: "max-content",
-                            overflowX: "auto",
-                        }}
+                        style={SERVO_CHART_STYLE}
                         data={[
-                            data2,
+                            props.data2,
                             {
                                 type: "scatter",
                                 mode: "lines",
@@ -198,12 +104,7 @@ export const ServoModelChart = observer(() => {
                                 name: "Линия",
                             },
                         ]}
-                        layout={{
-                            orientation: 10,
-                            xaxis: { title: "Время" },
-                            yaxis: { title: "Изменение угловой скорости" },
-                            title: "Модель с сервомотором",
-                        }}
+                        layout={SERVO_CHART_LAYOUT_SPEED}
                     />
                 </div>
             ),
@@ -211,7 +112,7 @@ export const ServoModelChart = observer(() => {
     ];
     return (
         <>
-            {!loading && (
+            {!props.loading && (
                 <Flex
                     vertical
                     align="center"

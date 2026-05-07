@@ -11,7 +11,7 @@ type SleeveGLTF = GLTF & {
 };
 
 export const Sleeve = (props: MaterialMapsProps) => {
-    const model = useGLTF("/sleeve.glb") as SleeveGLTF;
+    const model = useGLTF("models/sleeve.glb") as SleeveGLTF;
 
     applyMaterialMaps(
         model.nodes.Sleeve.material as MeshStandardMaterial,
@@ -29,4 +29,4 @@ export const Sleeve = (props: MaterialMapsProps) => {
     );
 };
 
-useGLTF.preload("/sleeve.glb");
+useGLTF.preload("models/sleeve.glb");

@@ -8,7 +8,19 @@ import type { SettingsPanelProps } from "./types";
 import { Container } from "./styles";
 
 export const SettingsPanel = observer(
-    ({ tData, solution }: SettingsPanelProps) => {
+    ({
+        tData,
+        solution,
+        classicError,
+        classicLoading,
+        onRetryClassic,
+        servoData,
+        servoData2,
+        servoError,
+        servoLoading,
+        servoTimeData,
+        onRetryServo,
+    }: SettingsPanelProps) => {
         const uiStore = useContentUiStore();
 
         return (
@@ -19,7 +31,19 @@ export const SettingsPanel = observer(
                     ) : uiStore.controlValue === "params" ? (
                         <ParametersPanel />
                     ) : uiStore.controlValue === "graphic" ? (
-                        <GraphicPanel tData={tData} solution={solution} />
+                        <GraphicPanel
+                            tData={tData}
+                            solution={solution}
+                            classicError={classicError}
+                            classicLoading={classicLoading}
+                            onRetryClassic={onRetryClassic}
+                            servoData={servoData}
+                            servoData2={servoData2}
+                            servoError={servoError}
+                            servoLoading={servoLoading}
+                            servoTimeData={servoTimeData}
+                            onRetryServo={onRetryServo}
+                        />
                     ) : null}
                 </Container>
             </AnimatePresence>

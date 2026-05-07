@@ -24,7 +24,7 @@ export const Knuckle = ({
     pivotMode = "end",
     ...materialMaps
 }: KnuckleProps) => {
-    const model = useGLTF("/knuckle.glb") as KnuckleGLTF;
+    const model = useGLTF("models/knuckle.glb") as KnuckleGLTF;
 
     applyMaterialMaps(
         model.nodes.Knuckle.material as MeshStandardMaterial,
@@ -100,4 +100,4 @@ export const Knuckle = ({
     );
 };
 
-useGLTF.preload("/knuckle.glb");
+useGLTF.preload("models/knuckle.glb");

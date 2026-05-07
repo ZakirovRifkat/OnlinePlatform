@@ -15,12 +15,25 @@ export const GraphicPanel = observer((props: GraphicPanelProps) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            {uiStore.type && <ServoModelChart />}
+            {uiStore.type && (
+                <ServoModelChart
+                    data={props.servoData}
+                    data2={props.servoData2}
+                    error={props.servoError}
+                    loading={props.servoLoading}
+                    onRetry={props.onRetryServo}
+                    timeData={props.servoTimeData}
+                />
+            )}
             {!uiStore.type && (
                 <ClassicModelChart
                     tSpan={props.tData}
                     solution={props.solution}
                     play={uiStore.isPlay}
+                    playStartedAt={uiStore.playStartedAt}
+                    loading={props.classicLoading}
+                    error={props.classicError}
+                    onRetry={props.onRetryClassic}
                 />
             )}
         </Container>

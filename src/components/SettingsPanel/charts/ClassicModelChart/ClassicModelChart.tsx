@@ -1,45 +1,50 @@
-import { useEffect, useMemo, useRef, useState } from "react";
 import Plot from "react-plotly.js";
+import { Button, Result, Spin } from "antd";
 import type { ClassicModelChartProps } from "./types";
+import { CLASSIC_CHART_LAYOUT, CLASSIC_CHART_STYLE } from "./constants";
+import { useClassicModelPlayback } from "./hooks/useClassicModelPlayback";
 import { Container } from "./styles";
 
-const layout = {
-    title: "Физическая интерпретация",
-    xaxis: { title: "Время" },
-    yaxis: { title: "Уголовая корость" },
-};
-
 export const ClassicModelChart = (props: ClassicModelChartProps) => {
-    const [data, setData] = useState(0);
+    const { currentTime, maxY, minY, yData } = useClassicModelPlayback({
+        play: props.play,
+        playStartedAt: props.playStartedAt,
+        solution: props.solution,
+        tSpan: props.tSpan,
+    });
 
-    const intervalIdRef = useRef<number | null>(null);
+    if (props.loading) {
+        return (
+            <Container>
+                {Boolean(props.error) && (
+                    <Result
+                        status="error"
+                        title="Ошибка запроса"
+                        subTitle="Повторите запрос или поменяйте параметры"
+                        extra={[
+                            <Button
+                                type="primary"
+                                key="classic-retry"
+                                onClick={props.onRetry}
+                            >
+                                Обновить
+                            </Button>,
+                        ]}
+                    />
+                )}
+                {!props.error && <Spin />}
+            </Container>
+        );
+    }
 
-    const yData = useMemo(
-        () => props.solution?.map((row) => row[0]) ?? [],
-        [props.solution],
-    );
-
-    const func = () => {
-        const id = setInterval(() => {
-            setData((prev) => prev + 1);
-        }, 10);
-        intervalIdRef.current = id;
-    };
-
-    useEffect(() => {
-        setData(0);
-        intervalIdRef.current ? clearInterval(intervalIdRef.current) : null;
-        props.play ? func() : null;
-    }, [props.play]);
+    if (yData.length === 0) {
+        return <Container>Подготовка данных...</Container>;
+    }
 
     return (
         <Container>
             <Plot
-                style={{
-                    maxWidth: "500px",
-                    maxHeight: "450px",
-                    width: "max-content",
-                }}
+                style={CLASSIC_CHART_STYLE}
                 data={[
                     {
                         x: props.tSpan,
@@ -52,17 +57,14 @@ export const ClassicModelChart = (props: ClassicModelChartProps) => {
                     {
                         type: "scatter",
                         mode: "lines",
-                        x: [data, data],
-                        y: [
-                            Math.min(...yData) * 1.1 + 0.01,
-                            Math.max(...yData) * 1.1,
-                        ], // Меняйте в зависимости от диапазона оси y на вашем графике
+                        x: [currentTime, currentTime],
+                        y: [minY * 1.1 + 0.01, maxY * 1.1],
                         showlegend: false,
                         textinfo: "none",
                         name: "Линия",
                     },
                 ]}
-                layout={layout}
+                layout={CLASSIC_CHART_LAYOUT}
             />
         </Container>
     );

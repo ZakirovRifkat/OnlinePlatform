@@ -18,7 +18,7 @@ function App() {
             name("Displacement"),
             name("NormalGL"),
             name("Roughness"),
-        ]
+        ],
     );
 
     return (

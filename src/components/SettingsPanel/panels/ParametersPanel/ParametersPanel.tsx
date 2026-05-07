@@ -1,4 +1,5 @@
 import { observer } from "mobx-react-lite";
+import { useEffect, useState } from "react";
 import {
     useContentUiStore,
     useServoStore,
@@ -9,13 +10,73 @@ import {
     Emasure,
     Input,
     InputText,
-    Tab,
-    TabsContainer,
 } from "./styles";
 
 export const ParametersPanel = observer(() => {
     const uiStore = useContentUiStore();
     const servoStore = useServoStore();
+
+    const [servoAInput, setServoAInput] = useState(String(servoStore.servoA));
+    const [servoBInput, setServoBInput] = useState(String(servoStore.servoB));
+    const [servoCInput, setServoCInput] = useState(String(servoStore.servoC));
+    const [servoDeltaInput, setServoDeltaInput] = useState(
+        String(servoStore.servoDelta),
+    );
+    const [omegaInput, setOmegaInput] = useState(
+        String(uiStore.initialConditions[0]),
+    );
+    const [aInput, setAInput] = useState(String(uiStore.aParams));
+    const [f0Input, setF0Input] = useState(String(uiStore.f0Params));
+    const [mInput, setMInput] = useState(String(uiStore.mParams));
+
+    useEffect(() => {
+        setServoAInput(String(servoStore.servoA));
+    }, [servoStore.servoA]);
+
+    useEffect(() => {
+        setServoBInput(String(servoStore.servoB));
+    }, [servoStore.servoB]);
+
+    useEffect(() => {
+        setServoCInput(String(servoStore.servoC));
+    }, [servoStore.servoC]);
+
+    useEffect(() => {
+        setServoDeltaInput(String(servoStore.servoDelta));
+    }, [servoStore.servoDelta]);
+
+    useEffect(() => {
+        setOmegaInput(String(uiStore.initialConditions[0]));
+    }, [uiStore.initialConditions]);
+
+    useEffect(() => {
+        setAInput(String(uiStore.aParams));
+    }, [uiStore.aParams]);
+
+    useEffect(() => {
+        setF0Input(String(uiStore.f0Params));
+    }, [uiStore.f0Params]);
+
+    useEffect(() => {
+        setMInput(String(uiStore.mParams));
+    }, [uiStore.mParams]);
+
+    const handleNumericChange = (
+        value: string,
+        setInput: (next: string) => void,
+        onValidNumber: (next: number) => void,
+    ) => {
+        setInput(value);
+
+        if (value.trim() === "") {
+            return;
+        }
+
+        const parsed = Number(value);
+        if (Number.isFinite(parsed)) {
+            onValidNumber(parsed);
+        }
+    };
 
     return (
         <Container
@@ -24,50 +85,56 @@ export const ParametersPanel = observer(() => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5 }}
         >
-            <TabsContainer $active={uiStore.type}>
-                <Tab onClick={() => uiStore.setType(false)}>
-                    Классическая модель регулятора
-                </Tab>
-                <Tab onClick={() => uiStore.setType(true)}>
-                    Модель с<br /> сервомотором
-                </Tab>
-            </TabsContainer>
             {uiStore.type && (
                 <DataInputContainer>
                     <InputText>
                         <div>Коэффициент A</div>{" "}
                         <Input
-                            value={servoStore.servoA}
+                            value={servoAInput}
                             onChange={(e) => {
-                                servoStore.setServoA(Number(e.target.value));
+                                handleNumericChange(
+                                    e.target.value,
+                                    setServoAInput,
+                                    servoStore.setServoA,
+                                );
                             }}
                         />
                     </InputText>
                     <InputText>
                         <div>Коэффициент B</div>
                         <Input
-                            value={servoStore.servoB}
+                            value={servoBInput}
                             onChange={(e) => {
-                                servoStore.setServoB(Number(e.target.value));
+                                handleNumericChange(
+                                    e.target.value,
+                                    setServoBInput,
+                                    servoStore.setServoB,
+                                );
                             }}
                         />
                     </InputText>
                     <InputText>
                         <div>Коэффициент C</div>
                         <Input
-                            value={servoStore.servoC}
+                            value={servoCInput}
                             onChange={(e) => {
-                                servoStore.setServoC(Number(e.target.value));
+                                handleNumericChange(
+                                    e.target.value,
+                                    setServoCInput,
+                                    servoStore.setServoC,
+                                );
                             }}
                         />
                     </InputText>
                     <InputText>
                         <div>Коэффициент сервомотора (δ)</div>
                         <Input
-                            value={servoStore.servoDelta}
+                            value={servoDeltaInput}
                             onChange={(e) => {
-                                servoStore.setServoDelta(
-                                    Number(e.target.value),
+                                handleNumericChange(
+                                    e.target.value,
+                                    setServoDeltaInput,
+                                    servoStore.setServoDelta,
                                 );
                             }}
                         />
@@ -91,13 +158,18 @@ export const ParametersPanel = observer(() => {
                             скорость ώ
                         </div>
                         <Input
-                            value={uiStore.initialConditions[0]}
+                            value={omegaInput}
                             onChange={(e) => {
-                                uiStore.setInitialConditions([
-                                    Number(e.target.value),
-                                    0,
-                                    1,
-                                ]);
+                                handleNumericChange(
+                                    e.target.value,
+                                    setOmegaInput,
+                                    (next) =>
+                                        uiStore.setInitialConditions([
+                                            next,
+                                            0,
+                                            1,
+                                        ]),
+                                );
                             }}
                         />
                         <Emasure>рад/с</Emasure>
@@ -105,9 +177,13 @@ export const ParametersPanel = observer(() => {
                     <InputText>
                         <div>Коэффициент трения</div>{" "}
                         <Input
-                            value={uiStore.aParams}
+                            value={aInput}
                             onChange={(e) => {
-                                uiStore.setAParams(Number(e.target.value));
+                                handleNumericChange(
+                                    e.target.value,
+                                    setAInput,
+                                    uiStore.setAParams,
+                                );
                             }}
                         />
                         <Emasure>Н/кг*мс^2</Emasure>
@@ -115,9 +191,13 @@ export const ParametersPanel = observer(() => {
                     <InputText>
                         <div>Внешняя сила</div>{" "}
                         <Input
-                            value={uiStore.f0Params}
+                            value={f0Input}
                             onChange={(e) => {
-                                uiStore.setF0Params(Number(e.target.value));
+                                handleNumericChange(
+                                    e.target.value,
+                                    setF0Input,
+                                    uiStore.setF0Params,
+                                );
                             }}
                         />
                         <Emasure>Н</Emasure>
@@ -125,9 +205,13 @@ export const ParametersPanel = observer(() => {
                     <InputText>
                         <div>Масса</div>{" "}
                         <Input
-                            value={uiStore.mParams}
+                            value={mInput}
                             onChange={(e) => {
-                                uiStore.setMParams(Number(e.target.value));
+                                handleNumericChange(
+                                    e.target.value,
+                                    setMInput,
+                                    uiStore.setMParams,
+                                );
                             }}
                         />
                         <Emasure>Кг</Emasure>

@@ -14,7 +14,7 @@ const getFirstMeshNode = (nodes: Record<string, THREE.Object3D>) =>
     );
 
 export const EngineGear = (props: MaterialMapsProps) => {
-    const model = useGLTF("/main_gear.glb") as GearGLTF;
+    const model = useGLTF("models/main_gear.glb") as GearGLTF;
     const meshNode = getFirstMeshNode(model.nodes);
 
     if (!meshNode) {
@@ -38,4 +38,4 @@ export const EngineGear = (props: MaterialMapsProps) => {
     );
 };
 
-useGLTF.preload("/main_gear.glb");
+useGLTF.preload("models/main_gear.glb");

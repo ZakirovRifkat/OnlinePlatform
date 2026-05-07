@@ -7,6 +7,7 @@ import type { ControlValue, GovernorState } from "../page/Content/types";
 
 export class ContentUiStore {
     isPlay = false;
+    playStartedAt: number | null = null;
     controlValue: ControlValue = DEFAULT_CONTROL_VALUE;
     isOrbit = false;
     type = false;
@@ -30,7 +31,17 @@ export class ContentUiStore {
     }
 
     setPlay(value: boolean) {
+        const wasPlaying = this.isPlay;
         this.isPlay = value;
+
+        if (value && !wasPlaying) {
+            this.playStartedAt = Date.now();
+            return;
+        }
+
+        if (!value) {
+            this.playStartedAt = null;
+        }
     }
 
     togglePlay() {
@@ -42,23 +53,43 @@ export class ContentUiStore {
     }
 
     setType(value: boolean) {
+        const hasChanged = this.type !== value;
         this.type = value;
         localStorage.setItem("type", String(value));
+
+        if (!hasChanged) {
+            return;
+        }
+
+        // On model switch, restart chart timeline from t=0.
+        this.playStartedAt = this.isPlay ? Date.now() : null;
     }
 
     setAParams(value: number) {
+        if (!Number.isFinite(value)) {
+            return;
+        }
         this.aParams = value;
     }
 
     setF0Params(value: number) {
+        if (!Number.isFinite(value)) {
+            return;
+        }
         this.f0Params = value;
     }
 
     setMParams(value: number) {
+        if (!Number.isFinite(value)) {
+            return;
+        }
         this.mParams = value;
     }
 
     setInitialConditions(value: GovernorState) {
+        if (!value.every((item) => Number.isFinite(item))) {
+            return;
+        }
         this.initialConditions = value;
     }
 }

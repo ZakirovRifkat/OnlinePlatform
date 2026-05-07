@@ -1,5 +1,4 @@
 import { useFrame, useLoader } from "@react-three/fiber";
-import { Text } from "@react-three/drei";
 import * as THREE from "three";
 import { useMemo, useRef } from "react";
 import type { MutableRefObject, RefObject } from "react";
@@ -56,20 +55,24 @@ export const Governor = (props: GovernorProps) => {
     const sleeveRef = useRef<THREE.Group | null>(null);
     const sleeveGuideRef = useRef<THREE.Group | null>(null);
     const sleeveKnucklePivotRef = useRef<THREE.Group | null>(null);
+    const sleeveToRodOffsetYRef = useRef<number | null>(null);
+    const sleeveBaseYRef = useRef<number | null>(null);
+    const lastRotorFactorRef = useRef<number | null>(null);
+    const lastSleeveProgressRef = useRef<number | null>(null);
 
-    const showPivotHelper = false;
+    const rodBaseRotationZ = Math.PI / 2;
+    const sleeveToBallRodLength = props.type ? 11 : 5.2;
 
     const engineShaftGeometry = useMemo(
         () => new THREE.CylinderGeometry(0.6, 0.6, 3, 128, 96),
         [],
     );
-    const engineBlockGeometry = useMemo(
-        () => new THREE.BoxGeometry(3.4, 4, 4),
-        [],
-    );
     const engineOutletLength = 3.4;
     const engineOutletCenterY = -8.2;
     const gateHeight = 0.15;
+    const servoOutletYOffset = props.type ? -5.8 : 0;
+    const outletAssemblyX = props.type ? -15 : -2.8;
+    const gateX = props.type ? 4.6 : 4.6; // X position for gate: servo vs classic
     // const engineSecondOutletOffsetX = 2.3;
 
     const engineOutletGeometry = useMemo(
@@ -92,6 +95,7 @@ export const Governor = (props: GovernorProps) => {
     const gateRef = useRef<THREE.Group>(null!);
     const gateBaseWorldPosRef = useRef<THREE.Vector3 | null>(null);
     const gateBaseSliderProgressRef = useRef<number | null>(null);
+    const prevModeRef = useRef<boolean>(props.type);
 
     const sleeveRimGeometry = useMemo(
         () => new THREE.TorusGeometry(1, 0.06, 32, 96),
@@ -99,6 +103,10 @@ export const Governor = (props: GovernorProps) => {
     );
     const sleeveBallGeometry = useMemo(
         () => new THREE.SphereGeometry(0.16, 64, 64),
+        [],
+    );
+    const handleBallGeometry = useMemo(
+        () => new THREE.SphereGeometry(0.7, 32, 32),
         [],
     );
 
@@ -241,7 +249,7 @@ export const Governor = (props: GovernorProps) => {
                     rotation={[0, 0, Math.PI / 2]}
                     position={[5.94, 0.5, 0.02]}
                     scale={1}
-                    geometry={new THREE.SphereGeometry(0.7, 128, 128)}
+                    geometry={handleBallGeometry}
                 >
                     <meshStandardMaterial
                         displacementScale={0}
@@ -274,9 +282,49 @@ export const Governor = (props: GovernorProps) => {
     }, [props.type, minSpeed, maxSpeed]);
 
     useFrame(() => {
+        const emitRotorFactor = (value: number) => {
+            if (!props.onRotorSpeedFactorChange) {
+                return;
+            }
+
+            const safeValue = Number.isFinite(value) ? Math.max(0, value) : 0;
+            if (
+                lastRotorFactorRef.current !== null &&
+                Math.abs(lastRotorFactorRef.current - safeValue) < 0.005
+            ) {
+                return;
+            }
+
+            lastRotorFactorRef.current = safeValue;
+            props.onRotorSpeedFactorChange(safeValue);
+        };
+
+        // Check if mode changed
+        const modeChanged = prevModeRef.current !== props.type;
+        if (modeChanged) {
+            prevModeRef.current = props.type;
+            gateBaseWorldPosRef.current = null;
+            gateBaseSliderProgressRef.current = null;
+
+            // Reset gate position when mode changes
+            if (gateRef.current) {
+                gateRef.current.position.set(gateX, -10.25, -0.24);
+            }
+        }
+
         if (!props.play) {
             gateBaseWorldPosRef.current = null;
             gateBaseSliderProgressRef.current = null;
+            emitRotorFactor(0);
+        } else {
+            // Reset gate position when play starts (if not already reset by mode change)
+            if (
+                gateRef.current &&
+                gateBaseWorldPosRef.current === null &&
+                !modeChanged
+            ) {
+                gateRef.current.position.set(gateX, -10.25, -0.24);
+            }
         }
 
         if (
@@ -287,6 +335,27 @@ export const Governor = (props: GovernorProps) => {
         ) {
             sleeveGuideRef.current.rotation.y =
                 -groupRef.current.rotation.y - sleeveRef.current.rotation.y;
+        }
+
+        if (
+            props.isModelLoaded &&
+            sleeveRef.current &&
+            sleeveKnucklePivotRef.current
+        ) {
+            if (sleeveToRodOffsetYRef.current === null) {
+                sleeveToRodOffsetYRef.current =
+                    sleeveKnucklePivotRef.current.position.y -
+                    sleeveRef.current.position.y;
+            }
+
+            if (sleeveBaseYRef.current === null) {
+                sleeveBaseYRef.current = sleeveRef.current.position.y;
+            }
+
+            // Тяга сохраняет фиксированный угол и следует только по вертикали за муфтой.
+            sleeveKnucklePivotRef.current.rotation.set(0, 0, rodBaseRotationZ);
+            sleeveKnucklePivotRef.current.position.y =
+                sleeveRef.current.position.y + sleeveToRodOffsetYRef.current;
         }
 
         // Основной цикл кадра: обновляем анимацию только когда модель загружена и включено воспроизведение.
@@ -313,12 +382,13 @@ export const Governor = (props: GovernorProps) => {
                 maxSpeed,
             });
 
+            const driveSpeed = !props.type
+                ? speedRef.current
+                : rotorSpeedRef.current / 2;
+
             // Вращаем главный узел: для сервомотора используется отдельная скорость ротора.
-            if (!props.type) {
-                groupRef.current.rotation.y += speedRef.current;
-            } else {
-                groupRef.current.rotation.y += rotorSpeedRef.current / 2;
-            }
+            groupRef.current.rotation.y += driveSpeed;
+            emitRotorFactor(Math.abs(driveSpeed));
 
             // Обновляем углы верхних и нижних рычагов.
             leftHandleUp.current.rotation.z = THREE.MathUtils.degToRad(angleUp);
@@ -339,6 +409,18 @@ export const Governor = (props: GovernorProps) => {
                           0,
                           1,
                       );
+
+            if (props.onSleeveProgressChange) {
+                if (
+                    lastSleeveProgressRef.current === null ||
+                    Math.abs(
+                        lastSleeveProgressRef.current - sliderTopProgress,
+                    ) > 0.005
+                ) {
+                    lastSleeveProgressRef.current = sliderTopProgress;
+                    props.onSleeveProgressChange(sliderTopProgress);
+                }
+            }
             const targetRightWaterLevel = THREE.MathUtils.clamp(
                 1 - sliderTopProgress,
                 0.03,
@@ -359,12 +441,25 @@ export const Governor = (props: GovernorProps) => {
             if (gateRef.current) {
                 const parent = gateRef.current.parent;
                 if (parent) {
-                    if (!gateBaseWorldPosRef.current) {
+                    // For classic model, initialize base position from lever_right
+                    if (!props.type && props.leverRightPosition) {
+                        if (!gateBaseWorldPosRef.current) {
+                            const currentGatePos = gateRef.current.getWorldPosition(
+                                new THREE.Vector3(),
+                            );
+                            gateBaseWorldPosRef.current = new THREE.Vector3(
+                                props.leverRightPosition.x,
+                                props.leverRightPosition.y,
+                                currentGatePos.z,
+                            );
+                        }
+                    } else if (!gateBaseWorldPosRef.current) {
                         gateBaseWorldPosRef.current =
                             gateRef.current.getWorldPosition(
                                 new THREE.Vector3(),
                             );
                     }
+
                     if (gateBaseSliderProgressRef.current === null) {
                         gateBaseSliderProgressRef.current = sliderTopProgress;
                     }
@@ -372,8 +467,29 @@ export const Governor = (props: GovernorProps) => {
                     const baseWorldPos = gateBaseWorldPosRef.current;
                     const baseSliderProgress =
                         gateBaseSliderProgressRef.current;
-                    const targetGateOffsetY =
-                        (baseSliderProgress - sliderTopProgress) * gateTravel;
+
+                    let targetGateOffsetY: number;
+                    if (props.type) {
+                        // Servo model: use lever2Position displacement
+                        if (props.lever2Position) {
+                            targetGateOffsetY = props.lever2Position.yDisplacement - 1.2;
+                        } else {
+                            // Fallback to servoTripleSignal if lever2Position not available
+                            targetGateOffsetY = -THREE.MathUtils.clamp(
+                                props.servoTripleSignal ?? 0,
+                                -1,
+                                1,
+                            ) * gateTravel;
+                        }
+                    } else {
+                        // Classic model: sync with lever_right position
+                        if (props.leverRightPosition) {
+                            targetGateOffsetY = props.leverRightPosition.y - baseWorldPos.y;
+                        } else {
+                            // Fallback to old behavior if leverRightPosition not provided
+                            targetGateOffsetY = (baseSliderProgress - sliderTopProgress) * gateTravel;
+                        }
+                    }
 
                     const currentWorldPos = gateRef.current.getWorldPosition(
                         new THREE.Vector3(),
@@ -393,9 +509,6 @@ export const Governor = (props: GovernorProps) => {
 
             // console.log(Math.asin(delta / 10));
 
-            sleeveKnucklePivotRef.current.rotation.z =
-                -1 * THREE.MathUtils.degToRad(angleUp) + 1.96349540849;
-
             rightHandleUp.current.rotation.z =
                 THREE.MathUtils.degToRad(angleUp);
             rightHandleDown.current.rotation.x = THREE.MathUtils.degToRad(
@@ -403,11 +516,10 @@ export const Governor = (props: GovernorProps) => {
             );
 
             if (engineGearSpinRef.current) {
-                engineGearSpinRef.current.rotation.y += speedRef.current;
+                engineGearSpinRef.current.rotation.y += driveSpeed;
 
                 const shaftTextureOffset =
-                    (engineShaftStripeTexture.offset.x + speedRef.current * 6) %
-                    1;
+                    (engineShaftStripeTexture.offset.x + driveSpeed * 6) % 1;
                 engineShaftStripeTexture.offset.x = shaftTextureOffset;
             }
         }
@@ -523,20 +635,13 @@ export const Governor = (props: GovernorProps) => {
             </group>
             <group
                 ref={sleeveKnucklePivotRef}
-                position={[5.3, -3.8, 0]}
+                position={[1, -3.8, 0]}
                 rotation={[0, 0, Math.PI / 2]}
             >
-                {showPivotHelper && (
-                    <>
-                        <axesHelper args={[1.2]} />
-                        <mesh>
-                            <sphereGeometry args={[0.09, 24, 24]} />
-                            <meshBasicMaterial color={"#ff00ff"} />
-                        </mesh>
-                    </>
-                )}
-                <mesh>
-                    <cylinderGeometry args={[0.14, 0.14, 10, 32]} />
+                <mesh position={[0, -sleeveToBallRodLength / 2, 0]}>
+                    <cylinderGeometry
+                        args={[0.14, 0.14, sleeveToBallRodLength, 32]}
+                    />
                     <meshStandardMaterial
                         color={"#b8bec8"}
                         metalness={0.85}
@@ -545,7 +650,11 @@ export const Governor = (props: GovernorProps) => {
                 </mesh>
             </group>
             <group position={[0.218, -7.58, 0]} rotation={[0, 0, Math.PI / 2]}>
-                <group ref={engineGearSpinRef}>
+                <group
+                    ref={engineGearSpinRef}
+                    position={[0, 0.4, 0]}
+                    rotation={[Math.PI, 0, 0]}
+                >
                     <EngineGear {...metalMaps} />
                     <mesh
                         geometry={engineShaftGeometry}
@@ -560,83 +669,73 @@ export const Governor = (props: GovernorProps) => {
                     </mesh>
                 </group>
 
-                <mesh geometry={engineBlockGeometry} position={[0, -4.7, 0]}>
-                    <meshStandardMaterial
-                        color={"#8b929b"}
-                        metalness={0.88}
-                        roughness={0.34}
-                    />
-                </mesh>
+                <group position={[outletAssemblyX, servoOutletYOffset, 0]}>
+                    {/* Первый цилиндр */}
+                    <group position={[0, engineOutletCenterY, 0]}>
+                        {/* Корпус полуцилиндра */}
+                        <mesh geometry={engineOutletGeometry}>
+                            <meshStandardMaterial
+                                color={"#8b929b"}
+                                metalness={0.88}
+                                roughness={0.34}
+                                side={THREE.DoubleSide}
+                            />
+                        </mesh>
 
-                {/* Первый цилиндр */}
-                <group position={[0, engineOutletCenterY, 0]}>
-                    {/* Корпус полуцилиндра */}
-                    <mesh geometry={engineOutletGeometry}>
-                        <meshStandardMaterial
-                            color={"#8b929b"}
-                            metalness={0.88}
-                            roughness={0.34}
-                            side={THREE.DoubleSide}
+                        <WaterHalf
+                            position={[-0.78, 0, -0.23]}
+                            scaleRef={rightRef}
+                            initialScale={1}
                         />
-                    </mesh>
+                    </group>
 
-                    {/* Вода */}
-                    <WaterHalf
-                        position={[-0.78, 0, -0.23]}
-                        scaleRef={rightRef}
-                        initialScale={1}
-                    />
-                </group>
+                    <group ref={gateRef} position={[gateX, -10.25, -0.24]}>
+                        <mesh position={[-1.5, 0, 0]}>
+                            <boxGeometry args={[3, gateHeight, 0.95]} />
+                            <meshStandardMaterial
+                                displacementScale={0}
+                                color={"#b8bec8"}
+                                metalness={0.88}
+                                roughness={0.34}
+                                {...standMaterialMaps}
+                            />
+                        </mesh>
+                        {/* Pivot point marker */}
+                        {/* <mesh position={[0, 0, 0]}>
+                            <sphereGeometry args={[0.15, 16, 16]} />
+                            <meshStandardMaterial
+                                color={"#ff0000"}
+                                emissive={"#ff0000"}
+                                emissiveIntensity={0.5}
+                            />
+                        </mesh> */}
+                    </group>
 
-                {/* Заслонка между блоками воды */}
-                <group ref={gateRef} position={[2.2, -10.25, -0.24]}>
-                    <mesh position={[0, 0, 0]}>
-                        <boxGeometry args={[3.6, gateHeight, 0.95]} />
-                        <meshStandardMaterial
-                            displacementScale={0}
-                            color={"#b8bec8"}
-                            metalness={0.88}
-                            roughness={0.34}
-                            {...standMaterialMaps}
+                    {/* Второй цилиндр */}
+                    <group
+                        position={[
+                            0,
+                            engineOutletCenterY - engineOutletLength,
+                            0,
+                        ]}
+                    >
+                        {/* Корпус полуцилиндра */}
+                        <mesh geometry={engineOutletGeometry}>
+                            <meshStandardMaterial
+                                color={"#8b929b"}
+                                metalness={0.88}
+                                roughness={0.34}
+                                side={THREE.DoubleSide}
+                            />
+                        </mesh>
+
+                        <WaterHalf
+                            position={[-0.78, -0.6, -0.23]}
+                            scaleRef={leftRef}
+                            initialScale={1}
                         />
-                    </mesh>
+                    </group>
                 </group>
-
-                {/* Второй цилиндр */}
-                <group
-                    position={[0, engineOutletCenterY - engineOutletLength, 0]}
-                >
-                    {/* Корпус полуцилиндра */}
-                    <mesh geometry={engineOutletGeometry}>
-                        <meshStandardMaterial
-                            color={"#8b929b"}
-                            metalness={0.88}
-                            roughness={0.34}
-                            side={THREE.DoubleSide}
-                        />
-                    </mesh>
-
-                    {/* Вода */}
-                    <WaterHalf
-                        position={[-0.78, -0.6, -0.23]}
-                        scaleRef={leftRef}
-                        initialScale={1}
-                    />
-                </group>
-
-                <Text
-                    font="/fonts/Cormorant-Bold.ttf"
-                    position={[0, -4.7, 2.01]}
-                    rotation={[0, 0, -Math.PI / 2]}
-                    fontSize={0.7}
-                    color={"#f2f2f2"}
-                    anchorX="center"
-                    anchorY="middle"
-                    maxWidth={2.8}
-                    textAlign="center"
-                >
-                    {"Паровой двигатель"}
-                </Text>
             </group>
         </>
     );

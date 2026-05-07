@@ -21,7 +21,7 @@ export const useGovernorSeriesData = ({
     const [yData, setYData] = useState<number[]>([]);
     const [rotor, setRotor] = useState<number[]>([]);
     const [minSpeed, setMinSpeed] = useState(0);
-    const [maxSpeed, setMaxSpeed] = useState(0);
+    const [maxSpeed, setMaxSpeed] = useState(1);
 
     // Источник данных зависит от выбранного типа модели.
     // Для классической модели берем решение ODE из props.solution,
@@ -33,7 +33,7 @@ export const useGovernorSeriesData = ({
             return;
         }
 
-        setYData(servoStore.servoZValues);
+        setYData(servoStore.servoYValues);
         setRotor(servoStore.servoYValues);
     }, [
         solution,

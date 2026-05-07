@@ -80,6 +80,55 @@ export const Icon = styled.img<{ $animate: boolean }>`
     }
 `;
 
+export const ModelTabsContainer = styled.div`
+    width: min(760px, calc(100% - 180px));
+    height: 44px;
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    box-sizing: border-box;
+    position: absolute;
+    top: 116px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    background: transparent;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.22);
+
+    @media screen and (max-width: 900px) {
+        width: min(640px, calc(100% - 120px));
+    }
+
+    @media screen and (max-width: 600px) {
+        width: calc(100% - 24px);
+        top: 102px;
+    }
+`;
+
+export const ModelTab = styled.button<{ $selected: boolean }>`
+    border: none;
+    border-bottom: 2px solid
+        ${(props) => (props.$selected ? "#664e2ac5" : "transparent")};
+    background-color: transparent;
+    cursor: pointer;
+    width: 50%;
+    font-family: var(--font);
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+    padding-bottom: 7px;
+    color: ${(props) =>
+        props.$selected ? "rgba(0, 0, 0, 0.95)" : "rgba(0, 0, 0, 0.75)"};
+    transition:
+        color 0.2s ease,
+        border-bottom-color 0.2s ease;
+
+    @media screen and (max-width: 600px) {
+        font-size: 14px;
+        line-height: 1.1;
+    }
+`;
+
 export const Footer = styled.div`
     width: 100%;
     display: flex;

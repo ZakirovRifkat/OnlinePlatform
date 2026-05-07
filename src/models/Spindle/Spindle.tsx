@@ -11,7 +11,7 @@ type SpindleGLTF = GLTF & {
 };
 
 export const Spindle = (props: MaterialMapsProps) => {
-    const model = useGLTF("/spindle.glb") as SpindleGLTF;
+    const model = useGLTF("models/spindle.glb") as SpindleGLTF;
 
     applyMaterialMaps(
         model.nodes.Spindle.material as MeshStandardMaterial,
@@ -29,4 +29,4 @@ export const Spindle = (props: MaterialMapsProps) => {
     );
 };
 
-useGLTF.preload("/spindle.glb");
+useGLTF.preload("models/spindle.glb");

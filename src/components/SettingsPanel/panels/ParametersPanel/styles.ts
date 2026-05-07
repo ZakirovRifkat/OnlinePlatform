@@ -10,40 +10,6 @@ export const Emasure = styled.div`
     }
 `;
 
-export const TabsContainer = styled.div<{ $active: boolean }>`
-    width: 100%;
-    height: 40px;
-    display: flex;
-    align-items: end;
-    justify-content: space-between;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-    box-sizing: border-box;
-    position: relative;
-
-    &:after {
-        content: "";
-        position: absolute;
-        width: 50%;
-        height: 2px;
-        background-color: #664e2ac5;
-        left: ${(props) => (props.$active ? "50%" : "0")};
-        transition: left 0.3s;
-    }
-`;
-
-export const Tab = styled.button`
-    border: none;
-    background-color: transparent;
-    cursor: pointer;
-    width: 50%;
-    font-family: var(--font);
-    font-size: 18px;
-    font-weight: 600;
-    text-align: center;
-    padding-bottom: 6px;
-    transition: box-shadow 0.3s;
-`;
-
 export const Container = styled(motion.div)`
     max-width: 520px;
     min-width: 520px;
@@ -83,7 +49,6 @@ export const DataInputContainer = styled.div`
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 20px;
 `;
 
 export const Input = styled.input`
