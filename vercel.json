@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "http://185.203.241.201/:path*"
+      "destination": "https://accompanying-fighter-induced-across.trycloudflare.com/:path*"
     },
     {
       "source": "/((?!.*\\.).*)",
