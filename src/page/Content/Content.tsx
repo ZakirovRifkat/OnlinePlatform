@@ -112,7 +112,10 @@ const ContentView = observer(
             if (error) {
                 notification.error({
                     message: "Ошибка классической модели",
-                    description: error,
+                    description:
+                        typeof error === "string"
+                            ? error
+                            : JSON.stringify(error),
                     placement: "topRight",
                 });
             }
@@ -122,7 +125,10 @@ const ContentView = observer(
             if (servoError) {
                 notification.error({
                     message: "Ошибка сервомодели",
-                    description: servoError,
+                    description:
+                        typeof servoError === "string"
+                            ? servoError
+                            : JSON.stringify(servoError),
                     placement: "topRight",
                 });
             }

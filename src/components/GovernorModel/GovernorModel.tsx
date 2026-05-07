@@ -214,7 +214,6 @@ export const GovernorModel = (props: GovernorModelProps) => {
 
                         {/* Second lever for servo mode */}
                         <LeverAssemblyInScene
-                            play={props.play}
                             sleeveProgress={sleeveProgress}
                             onLeverRightPositionChange={
                                 handleLever2PositionChange
@@ -230,7 +229,6 @@ export const GovernorModel = (props: GovernorModelProps) => {
 
                 {!props.type && (
                     <LeverAssemblyInScene
-                        play={props.play}
                         sleeveProgress={sleeveProgress}
                         onLeverRightPositionChange={
                             handleLeverRightPositionChange

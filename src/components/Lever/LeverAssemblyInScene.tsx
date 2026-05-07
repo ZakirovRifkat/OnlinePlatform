@@ -8,7 +8,6 @@ import { metalTextureName } from "../Governor/helpers";
 import { METAL_TEXTURE_TYPES } from "../Governor/constants";
 
 export interface LeverAssemblyInSceneProps {
-    play: boolean;
     sleeveProgress: number;
     onLeverRightPositionChange?: (position: LeverRightPosition) => void;
     sceneTransform?: {
@@ -19,7 +18,6 @@ export interface LeverAssemblyInSceneProps {
 }
 
 export const LeverAssemblyInScene = ({
-    play,
     sleeveProgress,
     onLeverRightPositionChange,
     sceneTransform,
@@ -96,16 +94,13 @@ export const LeverAssemblyInScene = ({
         [sceneTransform],
     );
 
-    const resolveAngle = useCallback(
-        (_elapsedSec: number) => {
-            const rangeRad = lever.rangeRad ?? 1;
-            const min = lever.minAngleRad ?? -rangeRad;
-            const max = lever.maxAngleRad ?? rangeRad;
-            // Map sleeveProgress: 0 = min, 1 = max
-            return min + (max - min) * sleeveProgressRef.current;
-        },
-        [lever.minAngleRad, lever.maxAngleRad, lever.rangeRad],
-    );
+    const resolveAngle = useCallback(() => {
+        const rangeRad = lever.rangeRad ?? 1;
+        const min = lever.minAngleRad ?? -rangeRad;
+        const max = lever.maxAngleRad ?? rangeRad;
+        // Map sleeveProgress: 0 = min, 1 = max
+        return min + (max - min) * sleeveProgressRef.current;
+    }, [lever.minAngleRad, lever.maxAngleRad, lever.rangeRad]);
 
     return (
         <LeverAssembly
